@@ -1,0 +1,28 @@
+version: "2"
+
+services:
+  server:
+    env_file:
+      - .env
+    image: python:3.9
+    working_dir: /mnt
+    volumes:
+      - .:/mnt
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    command: python src/server.py
+
+  db:
+    image: postgres
+    container_name: postgres
+    environment:
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: pass
+        POSTGRES_DB: db
+    restart: unless-stopped
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
