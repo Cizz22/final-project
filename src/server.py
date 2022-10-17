@@ -17,7 +17,7 @@ db.app = server
 
 @server.route("/")
 def main():
-    return "Hello World!"
+    return "Hello!! check database diagram here https://dbdiagram.io/d/60b86e8bb29a09603d17c2d6"
 
 
 for blueprint in vars(routes).values():
