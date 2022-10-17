@@ -20,9 +20,9 @@ class User(db.Model, BaseModel, metaclass=MetaBaseModel):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     deleted_at = db.Column(db.DateTime, nullable=True, server_default=None)
     
-    orders = db.relationship('Order', backref='user', lazy=True)
-    carts = db.relationship('Cart', backref='user', lazy=True)
-    user_addresses = db.relationship('UserAddress', backref='user', lazy=True)
+    orders = db.relationship('Order', back_populates='user', lazy=True)
+    carts = db.relationship('Cart', back_populates='user', lazy=True)
+    user_addresses = db.relationship('UserAddress', back_populates = 'user', lazy=True)
 
     def __init__(self, name, email, password, phone, type):
         """ Create a new User """

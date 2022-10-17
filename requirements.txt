@@ -4,3 +4,4 @@ SQLAlchemy==1.4.41
 Flask-SQLAlchemy==3.0.2
 python-dotenv
 Flask-Migrate==3.1.0
+Flask-RESTful

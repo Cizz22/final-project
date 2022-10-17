@@ -18,7 +18,7 @@ class UserAddress(db.Model, BaseModel, metaclass=MetaBaseModel):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     deleted_at = db.Column(db.DateTime, nullable=True, server_default=None)
 
-    user = db.relationship('User', backref=db.backref('user_addresses', lazy=True))
+    user = db.relationship('User', back_populates='user_addresses')
 
     def __init__(self, user_id, address, city, name, phone_number):
         """ Create a new User """

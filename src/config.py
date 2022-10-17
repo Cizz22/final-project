@@ -2,12 +2,12 @@ import logging
 import os
 
 DEBUG = os.getenv("ENVIRONEMENT") == "DEV"
-APPLICATION_ROOT = os.getenv("APPLICATION_APPLICATION_ROOT", "/application")
+APPLICATION_ROOT = os.getenv("APPLICATION_APPLICATION_ROOT", "/")
 HOST = os.getenv("APPLICATION_HOST")
 PORT = int(os.getenv("APPLICATION_PORT", "3000"))
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-DB_CONTAINER = os.getenv("APPLICATION_DB_CONTAINER", "localhost")
+DB_CONTAINER = os.getenv("APPLICATION_DB_CONTAINER", "db")
 POSTGRES = {
     "user": os.getenv("APPLICATION_POSTGRES_USER", "user"),
     "pw": os.getenv("APPLICATION_POSTGRES_PW", "pass"),
@@ -15,7 +15,7 @@ POSTGRES = {
     "port": os.getenv("APPLICATION_POSTGRES_PORT", 5432),
     "db": os.getenv("APPLICATION_POSTGRES_DB", "postgres"),
 }
-DB_URI = "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
+DB_URI = "postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
 
 logging.basicConfig(
     filename=os.getenv("SERVICE_LOG", "server.log"),
