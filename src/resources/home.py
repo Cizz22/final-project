@@ -8,7 +8,7 @@ from repositories import BannerRepository, CategoryRepository
 
 class BannerResource(Resource):
     """ Banner resource """
-    def get():
+    def get(self):
         """ Get all banners """
         banners = BannerRepository.get_all()
         return jsonify([banner.json for banner in banners])

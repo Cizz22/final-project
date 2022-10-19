@@ -1,4 +1,5 @@
 """define Order Model"""
+from models import order_items
 from . import db
 from .abc import BaseModel, MetaBaseModel
 from sqlalchemy.dialects.postgresql import UUID
@@ -20,6 +21,7 @@ class Order(db.Model, BaseModel, metaclass=MetaBaseModel):
     deleted_at = db.Column(db.DateTime, nullable=True, server_default=None)
     
     user = db.relationship('User', back_populates='orders')
+    order_items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan")
 
     def __init__(self, user_id, shipping_method, shipping_fee, subtotal, total_price):
         """ Create a new User """
