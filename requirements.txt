@@ -5,3 +5,8 @@ Flask-SQLAlchemy==3.0.2
 python-dotenv
 Flask-Migrate==3.1.0
 Flask-RESTful
+pip-upgrader
+pytest-cov
+pytest-sugar
+pytest
+flask_bcrypt

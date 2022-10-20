@@ -1,4 +1,5 @@
 from models import Banner
+from sqlalchemy.orm import load_only
 
 class BannerRepository():
     

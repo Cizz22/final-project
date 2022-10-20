@@ -1,3 +1,4 @@
+from urllib import response
 from flask.json import jsonify
 from flask_restful import Resource
 from utils import parse_params
@@ -11,7 +12,9 @@ class BannerResource(Resource):
     def get(self):
         """ Get all banners """
         banners = BannerRepository.get_all()
-        return jsonify([banner.json for banner in banners])
+        response = jsonify({"data":[banner.json for banner in banners]})
+        response.status_code = 200
+        return response
 
 
 class CategoryResource(Resource):

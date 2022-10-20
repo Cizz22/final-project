@@ -26,3 +26,25 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  testserver:
+    env_file: .env
+    image: python:3.9
+    working_dir: /mnt
+    volumes:
+      - .:/mnt
+    depends_on:
+      - testdb
+    ports:
+      - 5053:5053
+    environment:
+      APPLICATION_PORT: 5053
+      APPLICATION_DB_CONTAINER: testdb
+    command: python -m pytest test/
+
+  testdb:
+    image: postgres
+    environment:
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: pass
+        POSTGRES_DB: db

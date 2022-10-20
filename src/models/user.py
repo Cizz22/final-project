@@ -5,6 +5,7 @@ from . import db
 from .abc import BaseModel, MetaBaseModel
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 class User(db.Model, BaseModel, metaclass=MetaBaseModel):
     """ The User model """
@@ -24,10 +25,16 @@ class User(db.Model, BaseModel, metaclass=MetaBaseModel):
     carts = db.relationship('Cart', back_populates='user', lazy=True)
     user_addresses = db.relationship('UserAddress', back_populates = 'user', lazy=True)
 
-    def __init__(self, name, email, password, phone, type):
+    def __init__(self, name, email, phone, type):
         """ Create a new User """
         self.name = name
         self.email = email
-        self.password = password
         self.phone = phone
         self.type = type
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+

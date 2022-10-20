@@ -26,7 +26,7 @@ class Product(db.Model, BaseModel, metaclass=MetaBaseModel):
     category = db.relationship('Category', back_populates='products')
     product_images = db.relationship('ProductImage', back_populates='product')
     carts = db.relationship('Cart', back_populates='product')
-    order_items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan")
+    order_items = db.relationship('OrderItem', back_populates='product')
     
     def __init__(self, title, brand_name, size, price, category_id, condition, product_detail):
         """ Create a new User """

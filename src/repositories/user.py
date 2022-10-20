@@ -19,8 +19,8 @@ class UserRepository:
         return user.save()
 
     @staticmethod
-    def create(last_name, first_name, age):
+    def create(name, email, phone_number, password, type):
         """ Create a new user """
-        user = User(last_name=last_name, first_name=first_name, age=age)
-
+        user = User(name, email, phone_number, type=type)
+        user.set_password(password)
         return user.save()
