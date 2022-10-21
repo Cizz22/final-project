@@ -1,7 +1,8 @@
-from flask.json import jsonify
 from flask_restful import Resource
 from flask_restful.reqparse import Argument
-from utils import parse_params
+from utils import parse_params, response
+
+from repositories import UserRepository
 
 
 class SigninResource(Resource):
@@ -10,9 +11,9 @@ class SigninResource(Resource):
         Argument("email", location="json", required=True, help="Email user"),
         Argument("password", location="json", required=True, help="password user")
     )
-    def post(self,email, password):
+    def post(self, email, password):
         """ Signin """
-        return jsonify({"message": [email, password]})
+        return response({"data": [email, password]})
 
 
 class SignupResource(Resource):
@@ -20,4 +21,4 @@ class SignupResource(Resource):
 
     def post(self):
         """ Signup """
-        return jsonify({"message": "Signup"})
+        return response({"data": "Signup"})
