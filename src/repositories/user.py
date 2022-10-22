@@ -18,4 +18,9 @@ class UserRepository:
         user.set_password(password)
         return user.save()
     
+    @staticmethod
+    def get_by_id(id):
+        """ Query a user by id """
+        return User.query.filter_by(id=id).one_or_none()
+    
         

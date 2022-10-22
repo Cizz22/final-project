@@ -18,6 +18,8 @@ class ProductsResource(Resource):
     def get(self, page, page_size, sort_by, price, category, condition, product_name):
         """ Get all products """
         
+ 
+        
 
 class ProductImageSearchResource(Resource):
     """ ProductImageSearch resource """
@@ -33,9 +35,3 @@ class ProductResource(Resource):
 
     def get(self, id):
         """ Get product by id """
-
-    def put(self, id):
-        """ Update product by id """
-
-    def delete(self, id):
-        """ Delete product by id """
