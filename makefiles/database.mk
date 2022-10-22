@@ -3,7 +3,7 @@
 
 
 database.connect: ## Connect to database
-	docker-compose exec db psql -Upostgres
+	docker-compose exec db psql -U user -d db
 
 database.migrate: ## Create alembic migration file
 	docker-compose run --rm server python -m flask db migrate

@@ -14,7 +14,7 @@ POSTGRES = {
     "pw": os.getenv("APPLICATION_POSTGRES_PW", "pass"),
     "host": os.getenv("APPLICATION_POSTGRES_HOST", DB_CONTAINER),
     "port": os.getenv("APPLICATION_POSTGRES_PORT", 5432),
-    "db": os.getenv("APPLICATION_POSTGRES_DB", "postgres"),
+    "db": os.getenv("APPLICATION_POSTGRES_DB", "db"),
 }
 DB_URI = "postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
 
