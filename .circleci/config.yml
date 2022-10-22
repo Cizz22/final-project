@@ -4,6 +4,11 @@ jobs:
     docker:
       - image: circleci/python:3.9
       - image: circleci/postgres
+        environment:
+          POSTGRES_USER: user
+          POSTGRES_DB: db
+          POSTGRES_PASSWORD: pass
+
     environment:
       - PYTHONPATH: src:test
       - APPLICATION_POSTGRES_USER: user
@@ -11,6 +16,7 @@ jobs:
       - APPLICATION_POSTGRES_PORT: 5432
       - APPLICATION_POSTGRES_NAME: application
       - DEBUG_MODE: "True"
+      - FLASK_APP: src/server.py
     steps:
       - checkout
       - restore_cache:
@@ -38,7 +44,6 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            python -m pytest --junitxml=test-reports/report.xml --cov-report term --cov-config setup.cfg --cov=src/ test/
+            python -m pytest test/
       - store_test_results:
           path: test-reports
-     
