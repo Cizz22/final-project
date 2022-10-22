@@ -32,7 +32,7 @@ services:
     image: python:3.9
     working_dir: /mnt
     volumes:
-      - .:/mnt
+      - postgres-test-vol
     depends_on:
       - testdb
     ports:
@@ -51,5 +51,6 @@ services:
 
 volumes:
   postgres-vol:
+  postgres-test-vol:
 
 
