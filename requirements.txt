@@ -9,4 +9,4 @@ pytest-cov
 pytest-sugar
 pytest
 flask_bcrypt
-jwt
+PyJWT
