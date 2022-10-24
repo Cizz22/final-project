@@ -22,5 +22,11 @@ class UserRepository:
     def get_by_id(id):
         """ Query a user by id """
         return User.query.filter_by(id=id).one_or_none()
+
+    @staticmethod
+    def get_by_email(email):
+        """ Query a user by email """
+        return User.query.filter_by(email=email).one_or_none()
+
     
         

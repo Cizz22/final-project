@@ -14,6 +14,7 @@ class SigninResource(Resource):
         Argument("email", location="json", required=True, help="Email cannot be blank."),
         Argument("password", location="json", required=True, help="Password cannot be blank."),
     )
+
     def post(self, email, password):
         """ Signin """
         return response({"data": "Signin"})
@@ -24,6 +25,19 @@ class SigninResource(Resource):
 class SignupResource(Resource):
     """ Signup resource """
 
-    def post(self):
+    @parse_params(
+        Argument("email", location="json", required=True, help="Email cannot be blank."),
+        Argument("password", location="json", required=True, help="Password cannot be blank."),
+        Argument("name", location="json", required=True, help="Name cannot be blank"),
+        Argument("phone_number", location="json", required=True, help="Phone Number cannot be blank"),
+        Argument("type", location="json", required=True, help="Type cannot be blank"),
+    )
+
+    def post(self, email, password, name, phone_number, type):
         """ Signup """
-        return response({"data": "Signup"})
+
+        if UserRepository.get_by_email(email) is not None:
+            return response({"error": "Email is already registered"})
+
+        UserRepository.create(name, email, phone_number, password, type)
+        return response({"message": "Success, user created"})
