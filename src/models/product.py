@@ -28,10 +28,9 @@ class Product(db.Model, BaseModel, metaclass=MetaBaseModel):
     carts = db.relationship('Cart', back_populates='product')
     order_items = db.relationship('OrderItem', back_populates='product')
 
-    def __init__(self, title, brand_name, size, price, category_id, condition, product_detail):
+    def __init__(self, title, size, price, category_id, condition, product_detail):
         """ Create a new User """
         self.title = title
-        self.brand_name = brand_name
         self.size = size
         self.price = price
         self.category_id = category_id
