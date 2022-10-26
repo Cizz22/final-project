@@ -12,10 +12,11 @@ class Product(db.Model, BaseModel, metaclass=MetaBaseModel):
     """ The User model """
 
     __tablename__ = "products"
+    __table_args__ = (db.UniqueConstraint('title', 'category_id', 'condition'),)
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = db.Column(db.String(300), nullable=False, unique=True)
-    size = db.Column(db.String(300), nullable=False, server_default="[S,M,L,XL]")
+    size = db.Column(db.String(300), nullable=False, server_default='["S","M","L"]')
     price = db.Column(db.Float, nullable=False)
     category_id = db.Column(UUID(as_uuid=True), db.ForeignKey('categories.id'), nullable=False)
     product_detail = db.Column(db.Text(), nullable=False)
@@ -28,10 +29,9 @@ class Product(db.Model, BaseModel, metaclass=MetaBaseModel):
     carts = db.relationship('Cart', back_populates='product')
     order_items = db.relationship('OrderItem', back_populates='product')
 
-    def __init__(self, title, brand_name, size, price, category_id, condition, product_detail):
+    def __init__(self, title, size, price, category_id, condition, product_detail):
         """ Create a new User """
         self.title = title
-        self.brand_name = brand_name
         self.size = size
         self.price = price
         self.category_id = category_id

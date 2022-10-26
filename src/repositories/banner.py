@@ -12,8 +12,8 @@ class BannerRepository():
         return Banner.query.filter_by(id=id).one()
     
     @staticmethod
-    def create(name, image):
-        banner = Banner(title=name, image=image)
+    def create(title, image):
+        banner = Banner(title=title, image=image)
         return banner.save()
 
     
