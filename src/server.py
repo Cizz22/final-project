@@ -1,6 +1,7 @@
 from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
+from repositories import CategoryRepository
 from flask_seeder import FlaskSeeder
 
 import config
@@ -10,7 +11,7 @@ from models import db
 """Create an application."""
 server = Flask(__name__)
 
-"""Server Configuration""""
+"""Server Configuration"""
 server.debug = config.DEBUG
 server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
 server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
@@ -30,6 +31,8 @@ seeder.init_app(server, db)
 
 @server.route("/")
 def main():
+    CategoryRepository.create("Category 1", "https://picsum.photos/200/300")
+    CategoryRepository.create("Category 2", "https://picsum.photos/200/300")
     return "Hello!! check database diagram here https://dbdiagram.io/d/60b86e8bb29a09603d17c2d6"
 
 for blueprint in vars(routes).values():

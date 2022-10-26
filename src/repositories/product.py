@@ -1,7 +1,7 @@
 from models import Product
 from models import ProductImage
 from models import db
-
+import uuid
 
 
 class ProductRepository:
@@ -16,10 +16,11 @@ class ProductRepository:
         product = Product(title, price, category_id, condition, product_detail)
         return product.save()
 
+    @staticmethod
     def create_image(*images_url, product_id):
         for image_url in images_url:
-            images = ProductImage(image_url, product_id)
-            images.save()
+            product_image = ProductImage(image=image_url, product_id=product_id)
+            product_image.save()
 
     @staticmethod
     def get_by_id(id):
@@ -28,9 +29,11 @@ class ProductRepository:
     @staticmethod
     def get_query_results(*filters, page, page_size, sort, order):
         sort_by = f"{sort} asc" if order == "a_z" else f"{sort} desc"
+        NAMES = "price category_id condition title".split()
         res = Product.query
-        for i, filt in enumerate(filters, 1):
+
+        for name, filt in zip(NAMES, filters):
             if filt is not None:
-                d = {'filter{}'.format(i): filt}
-                res = res.filter(**d)
-        return res.order_by(db.text(sort_by)).paginate(page=page, per_page=page_size, error_out=False)
+                print(name, filt)
+                res = res.filter_by(**{name: filt})
+        return {"data": res.order_by(db.text(sort_by)).paginate(page=page, per_page=page_size) , "total" : res.count()}
