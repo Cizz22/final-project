@@ -3,6 +3,7 @@ from models import ProductImage
 from models import db
 
 
+
 class ProductRepository:
     """The Repository for products modol"""
 
@@ -11,9 +12,9 @@ class ProductRepository:
         return Product.query.all()
 
     @staticmethod
-    def create(title, size, price, category_id, condition, product_detail):
-        product = Product(title, size, price, category_id, condition, product_detail)
-        product.save()
+    def create(title, price, category_id, condition, product_detail):
+        product = Product(title, price, category_id, condition, product_detail)
+        return product.save()
 
     def create_image(*images_url, product_id):
         for image_url in images_url:
