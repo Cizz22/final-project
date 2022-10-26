@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
 
@@ -12,14 +12,16 @@ server.debug = config.DEBUG
 server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
 server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
 server.config["SECRET_KEY"] = config.SECRET_KEY
+server.config["IMAGE_URL"] = config.IMAGE_URL
+
 migrate = Migrate(server, db)
-db.init_app(server) 
+db.init_app(server)
 db.app = server
+
 
 @server.route("/")
 def main():
     return "Hello!! check database diagram here https://dbdiagram.io/d/60b86e8bb29a09603d17c2d6"
-
 
 for blueprint in vars(routes).values():
     if isinstance(blueprint, Blueprint):
