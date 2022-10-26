@@ -12,7 +12,7 @@ class ProductsResource(Resource):
     @parse_params(
         Argument("page", location="args", type=int, required=False, default=1),
         Argument("page_size", location="args", type=int, required=False, default=10),
-        Argument("sort_by", location="args", type=str, required=False, default="created_at"),
+        Argument("sort_by", location="args", type=str, required=False, default="Created_at a_z"),
         Argument("price", location="args", type=str, required=False, default=None),
         Argument("category", location="args", type=int,
                  required=False, default=None, dest="category_id"),
@@ -22,12 +22,23 @@ class ProductsResource(Resource):
     )
     def get(self, page, page_size, sort_by, price, category_id, condition, title):
         """ Get all products """
-        [sort, order] = sort_by.split()
+        sort_order = sort_by.split()
 
         products = ProductRepository.get_query_results(
-            filters=[category_id, condition, title], page=page, page_size=page_size, sort_by=sort, order=order)
+            price, category_id, condition, title, page=page, page_size=page_size, sort=sort_order[
+                0], order=sort_order[1]
+        )
 
-        return response({"data" : [product.json for product in products]}, 200)
+        res = {
+            "data": [{
+                "id": product.json['id'],
+                "image": product.product_images[0].json['image'],
+                "title": product.json['title'],
+                "price": product.json['price'],
+            } for product in products]
+        }
+
+        return response(res, 200)
 
 
 class ProductImageSearchResource(Resource):
@@ -47,4 +58,13 @@ class ProductResource(Resource):
         """ Get product by id """
         product = ProductRepository.get_by_id(id)
 
-        return response(product.json, 200)
+        res = {
+            "id": product.json['id'],
+            "title": product.json['title'],
+            "size": product.json['size'],
+            "product_detail": product.json['product_detail'],
+            "price": product.json['price'],
+            "images_url": [product_image.json['image'] for product_image in product.product_images],
+        }
+
+        return response(res, 200)

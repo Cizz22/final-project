@@ -15,7 +15,7 @@ class Product(db.Model, BaseModel, metaclass=MetaBaseModel):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = db.Column(db.String(300), nullable=False, unique=True)
-    size = db.Column(db.String(300), nullable=False, server_default="[S,M,L,XL]")
+    size = db.Column(db.String(300), nullable=False, server_default='["S","M","L"]')
     price = db.Column(db.Float, nullable=False)
     category_id = db.Column(UUID(as_uuid=True), db.ForeignKey('categories.id'), nullable=False)
     product_detail = db.Column(db.Text(), nullable=False)
