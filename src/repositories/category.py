@@ -11,8 +11,8 @@ class CategoryRepository():
         return Category.query.filter_by(id=id).one()
     
     @staticmethod
-    def create(name, image):
-        category = Category(title=name, image=image)
+    def create(title, image):
+        category = Category(title=title, image=image)
         return category.save()
 
     

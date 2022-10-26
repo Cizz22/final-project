@@ -1,4 +1,5 @@
 from models import Product
+from models import ProductImage
 from models import db
 
 
@@ -13,6 +14,11 @@ class ProductRepository:
     def create(title, size, price, category_id, condition, product_detail):
         product = Product(title, size, price, category_id, condition, product_detail)
         product.save()
+
+    def create_image(*images_url, product_id):
+        for image_url in images_url:
+            images = ProductImage(image_url, product_id)
+            images.save()
 
     @staticmethod
     def get_by_id(id):

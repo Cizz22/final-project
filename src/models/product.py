@@ -12,6 +12,7 @@ class Product(db.Model, BaseModel, metaclass=MetaBaseModel):
     """ The User model """
 
     __tablename__ = "products"
+    __table_args__ = (db.UniqueConstraint('title', 'category_id', 'condition'),)
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = db.Column(db.String(300), nullable=False, unique=True)
