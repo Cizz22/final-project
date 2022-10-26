@@ -1,23 +1,32 @@
-from flask import Flask, send_from_directory
+from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
+from flask_seeder import FlaskSeeder
 
 import config
 import routes
 from models import db
 
+"""Create an application."""
 server = Flask(__name__)
 
+"""Server Configuration""""
 server.debug = config.DEBUG
 server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
 server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
 server.config["SECRET_KEY"] = config.SECRET_KEY
 server.config["IMAGE_URL"] = config.IMAGE_URL
 
-migrate = Migrate(server, db)
+"""Database Configuration"""
 db.init_app(server)
 db.app = server
 
+"""Migration Configuration"""
+migrate = Migrate(server, db)
+
+"""Seeder Configuration"""
+seeder = FlaskSeeder()
+seeder.init_app(server, db)
 
 @server.route("/")
 def main():

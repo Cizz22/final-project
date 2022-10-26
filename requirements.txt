@@ -10,3 +10,4 @@ pytest-sugar
 pytest
 flask_bcrypt
 jwt
+flask_seeder
