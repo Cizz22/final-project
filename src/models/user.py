@@ -26,15 +26,15 @@ class User(db.Model, BaseModel, metaclass=MetaBaseModel):
     carts = db.relationship('Cart', back_populates='user', lazy=True)
     user_addresses = db.relationship('UserAddress', back_populates = 'user', lazy=True)
 
-    def __init__(self, name, email, phone, type):
+    def __init__(self, name, email, phone_number, type):
         """ Create a new User """
         self.name = name
         self.email = email
-        self.phone = phone
+        self.phone_number = phone_number
         self.type = type
     
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
