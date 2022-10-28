@@ -10,7 +10,7 @@ from models import db
 """Create an application."""
 server = Flask(__name__)
 
-"""Server Configuration""""
+"""Server Configuration"""
 server.debug = config.DEBUG
 server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
 server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
