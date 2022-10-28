@@ -65,10 +65,7 @@ While developing, you will probably rely mostly on `make server.start`; however,
 | `database.downgrade` | Downgrade your database by one migration.                                    |
 | `test`               | Run unit tests with pytest in its own container.                             |
 | `test.coverage`      | Run test coverage using pytest-cov.                                          |
-| `test.lint`          | Run flake8 on the `src` and `test` directories.                              |
-| `test.safety`        | Run safety to check if your vendors have security issues.                    |
-| `format.black`       | Format python files using Black.                                             |
-| `format.isort`       | Order python imports using isort.                                            |
+
 
 ## Database
 
