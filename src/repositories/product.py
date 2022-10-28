@@ -1,7 +1,6 @@
 from models import Product
 from models import ProductImage
 from models import db
-import uuid
 
 
 class ProductRepository:
@@ -37,3 +36,31 @@ class ProductRepository:
                 print(name, filt)
                 res = res.filter_by(**{name: filt})
         return {"data": res.order_by(db.text(sort_by)).paginate(page=page, per_page=page_size) , "total" : res.count()}
+
+    @staticmethod
+    def update(id, title, price, category_id, condition, product_detail):
+        product = Product.query.get(id)
+        product.title = title
+        product.price = price
+        product.category_id = category_id
+        product.condition = condition
+        product.product_detail = product_detail
+        product.commit()
+        return product
+
+    @staticmethod
+    def update_image(id, *images_url):
+        product = Product.query.get(id)
+        ProductImage.query.filter_by(product_id=id).delete()
+
+        for image_url in images_url:
+            product_image = ProductImage(image=image_url, product_id=id)
+            product_image.save()
+
+    def delete(id):
+        product = Product.query.get(id)
+        product.delete()
+
+    @staticmethod
+    def rollback():
+        db.session.rollback()

@@ -31,8 +31,6 @@ seeder.init_app(server, db)
 
 @server.route("/")
 def main():
-    CategoryRepository.create("Category 1", "https://picsum.photos/200/300")
-    CategoryRepository.create("Category 2", "https://picsum.photos/200/300")
     return "Hello!! check database diagram here https://dbdiagram.io/d/60b86e8bb29a09603d17c2d6"
 
 for blueprint in vars(routes).values():

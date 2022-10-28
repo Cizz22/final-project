@@ -69,6 +69,30 @@ class ProductsResource(Resource):
 
         return response({"message": "Product added"}, 201)
 
+    @parse_params(
+        Argument("title", location="json", required=True, help="Title is required"),
+        Argument("description", location="json", required=True,
+                 dest='product_detail', help="Description is required"),
+        Argument("price", location="json", required=True, help="Price is required"),
+        Argument("condition", location="json", required=True, help="Condition is required"),
+        Argument("category", location="json", required=True,
+                 dest='category_id', help="Category is required"),
+        Argument("images", location="json", required=True, type=list,
+                 dest='product_images', help="Images is required"),
+        Argument("product_id", location="json", required=True,
+                 dest='id', help="Product_id is required"),
+    )
+    def put(self, id, title, product_detail, condition, category_id, price, product_images):
+        try:
+            ProductRepository.update(
+                id, title, price, category_id, condition, product_detail)
+            ProductRepository.update_image(*product_images, product_id=id)
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            return response({"message": error}, 500)
+
+        return response({"message": "Product updated"}, 201)
+
 
 class ProductImageSearchResource(Resource):
     """ ProductImageSearch resource """
@@ -83,7 +107,7 @@ class ProductImageSearchResource(Resource):
 class ProductResource(Resource):
     """ Product resource """
 
-    def get(self, id):
+    def get(id):
         """ Get product by id """
         product = ProductRepository.get_by_id(id)
 
@@ -97,3 +121,12 @@ class ProductResource(Resource):
         }
 
         return response(res, 200)
+
+    def delete(id):
+        try:
+            ProductRepository.delete(id)
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            return response({"message": error}, 500)
+
+        return response({"message": "Product deleted"}, 201)
