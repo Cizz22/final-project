@@ -1,6 +1,7 @@
 from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
+from repositories import CategoryRepository
 from flask_seeder import FlaskSeeder
 
 import config

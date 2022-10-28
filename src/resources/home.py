@@ -21,4 +21,4 @@ class CategoryResource(Resource):
     def get(self):
         """ Get all categories """
         categories = CategoryRepository.get_all()
-        return response({"data": [category.json for category in categories]})
+        return response({"data": [{"id": category.json['id'], "title":category.json['title'], "image":category.json['image']} for category in categories]})
