@@ -43,7 +43,7 @@ class ProductsResource(Resource):
 
         return response(res, 200)
 
-    @ parse_params(
+    @parse_params(
         Argument("title", location="json", required=True, help="Title is required"),
         Argument("description", location="json", required=True,
                  dest='product_detail', help="Description is required"),
@@ -73,7 +73,7 @@ class ProductsResource(Resource):
 class ProductImageSearchResource(Resource):
     """ ProductImageSearch resource """
 
-    @ parse_params(
+    @parse_params(
         Argument("image", location="json")
     )
     def post(self, image):
