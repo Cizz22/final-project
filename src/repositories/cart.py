@@ -6,8 +6,11 @@ class CartRepository():
     def get_by_id(id):
         return Cart.query.filter_by(id=id).one_or_none()
 
+    def get_by_product_id(id):
+        return Cart.query.filter_by(product_id=id).one_or_none()
+
     def get_by_id_size(id, size):
-        return Cart.query.filter_by(id=id, size=size).one_or_none()
+        return Cart.query.filter_by(product_id=id, size=size).one_or_none()
 
     @staticmethod
     def get_by_user_id(user_id):

@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.dialects.postgresql import UUID
 
 from repositories import ProductRepository
+from utils.jwt_verif import token_required
 
 
 class ProductsResource(Resource):
@@ -55,7 +56,8 @@ class ProductsResource(Resource):
                  dest='product_images', help="Images is required"),
 
     )
-    def post(self, title, product_detail, condition, category_id, price, product_images):
+    @token_required
+    def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
 
         try:
@@ -85,7 +87,7 @@ class ProductsResource(Resource):
     def put(self, id, title, product_detail, condition, category_id, price, product_images):
         try:
             ProductRepository.update(
-                id, title, price, category_id, condition, product_detail)
+                id, title=title, price=price, category_id=category_id, condition=condition, product_detail=product_detail)
             ProductRepository.update_image(*product_images, product_id=id)
         except SQLAlchemyError as e:
             error = str(e.__dict__['orig'])
@@ -122,7 +124,8 @@ class ProductResource(Resource):
 
         return response(res, 200)
 
-    def delete(id):
+    @token_required
+    def delete(id, user_id):
         try:
             ProductRepository.delete(id)
         except SQLAlchemyError as e:

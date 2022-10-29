@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from utils import parse_params, response
 from flask_restful.reqparse import Argument
+from sqlalchemy.exc import SQLAlchemyError
 
 from utils.jwt_verif import token_required
 
@@ -28,13 +29,14 @@ class CartsResource(Resource):
 
             } for item in items
         ]
-        
+
         return response(res, 200)
 
     @parse_params(
         Argument("id", location="json", required=True,
                  help="Product ID cannot be blank.", dest="product_id"),
-        Argument("quantity", location="json", required=True, help="Quantity cannot be blank."),
+        Argument("quantity", location="json", required=True,
+                 help="Quantity cannot be blank.", type=float),
         Argument("size", location="json", required=True, help="Size cannot be blank."),
     )
     @token_required
@@ -42,14 +44,17 @@ class CartsResource(Resource):
         cartItem = CartRepository.get_by_id_size(product_id, size)
 
         if cartItem:
-            data = {
-                "quantity" : cartItem.quantity + quantity
-            }
-            CartRepository.update(cartItem.id, data)
+            quantity = cartItem.quantity + quantity
+            CartRepository.update(cartItem.id, quantity=quantity,
+                                  price=cartItem.product.price * quantity)
 
             return response({"message": "Item added to cart"}, 200)
 
         product = ProductRepository.get_by_id(product_id)
+
+        if not product:
+            return response({"message": "Product not found"}, 404)
+
         CartRepository.create(user_id, product_id, size, quantity, product.price * quantity)
 
         return response({"message": "Item added to cart"}, 200)
@@ -58,11 +63,12 @@ class CartsResource(Resource):
 class CartResource(Resource):
     """Cart Resource"""
 
-    def get(id):
-        pass
+    @token_required
+    def delete(self, id, user_id):
+        try:
+            CartRepository.delete(id)
+        except SQLAlchemyError as e:
+            error = str(e.__dict__['orig'])
+            return response({"message": error}, 500)
 
-    def put(id):
-        pass
-
-    def delete(id):
-        pass
+        return response({"message": "Cart deleted"}, 200)

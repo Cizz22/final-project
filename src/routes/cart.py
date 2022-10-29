@@ -14,5 +14,5 @@ Api(CART_BLUEPRINT).add_resource(
 )
 
 Api(CART_BLUEPRINT).add_resource(
-    CartResource , "/cart/<int:id>"
+    CartResource , "/cart/<string:id>"
 )

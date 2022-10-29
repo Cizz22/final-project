@@ -38,13 +38,10 @@ class ProductRepository:
         return {"data": res.order_by(db.text(sort_by)).paginate(page=page, per_page=page_size) , "total" : res.count()}
 
     @staticmethod
-    def update(id, title, price, category_id, condition, product_detail):
+    def update(id, **kwargs):
         product = Product.query.get(id)
-        product.title = title
-        product.price = price
-        product.category_id = category_id
-        product.condition = condition
-        product.product_detail = product_detail
+        for key, value in kwargs.items():
+            setattr(product, key, value)
         product.commit()
         return product
 

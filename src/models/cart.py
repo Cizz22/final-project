@@ -5,6 +5,7 @@ from .abc import BaseModel, MetaBaseModel
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
+
 class Cart(db.Model, BaseModel, metaclass=MetaBaseModel):
     """ The Cart model """
 
@@ -18,8 +19,8 @@ class Cart(db.Model, BaseModel, metaclass=MetaBaseModel):
     price = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     deleted_at = db.Column(db.DateTime, nullable=True, server_default=None)
-    
-    user = db.relationship('User',back_populates='carts')
+
+    user = db.relationship('User', back_populates='carts')
     product = db.relationship('Product', back_populates='carts')
 
     def __init__(self, user_id, product_id, quantity, size, price):
@@ -28,4 +29,4 @@ class Cart(db.Model, BaseModel, metaclass=MetaBaseModel):
         self.product_id = product_id
         self.quantity = quantity
         self.size = size
-        self.price - price
+        self.price = price
