@@ -14,9 +14,9 @@ class ProductsResource(Resource):
     @parse_params(
         Argument("page", location="args", type=int, required=False, default=1),
         Argument("page_size", location="args", type=int, required=False, default=10),
-        Argument("sort_by", location="args", type=str, required=False, default="Created_at a_z"),
+        Argument("sort_by", location="args", type=str, required=False, default="created_at z_a"),
         Argument("price", location="args", type=str, required=False, default=None),
-        Argument("category", location="args", type=int,
+        Argument("category", location="args", type=str,
                  required=False, default=None, dest="category_id"),
         Argument("condition", location="args", type=str, required=False, default=None),
         Argument("product_name", location="args", type=str,
@@ -24,11 +24,12 @@ class ProductsResource(Resource):
     )
     def get(self, page, page_size, sort_by, price, category_id, condition, title):
         """ Get all products """
-        sort_order = sort_by.split()
+        sort_by = sort_by.split(" ")
+        category_id = category_id.split(',') if category_id else None
+        price = price.split(',') if price else None
 
         products = ProductRepository.get_query_results(
-            price, category_id, condition, title, page=page, page_size=page_size, sort=sort_order[
-                0], order=sort_order[1]
+            page, page_size, sort_by, price=price, categories=category_id, condition=condition, title=title
         )
 
         res = {
