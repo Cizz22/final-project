@@ -12,4 +12,4 @@ def handle_exception(e):
         error = str(e.__dict__['orig'])
         return response({"message": error}, 500)
 
-    return response({"message": e}, 500) if current_app.debug == "DEV" else response({"message": "Internal Server Error"}, 500)
+    return response({"message": e}, 500) if current_app.debug else response({"message": "Internal Server Error"}, 500)
