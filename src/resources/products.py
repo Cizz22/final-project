@@ -119,9 +119,6 @@ class ProductImageSearchResource(Resource):
 
         return response({"message": "Product image search"}, 201)
 
-        return response({"message": "Product image search"}, 201)
-
-
 class ProductResource(Resource):
     """ Product resource """
 
