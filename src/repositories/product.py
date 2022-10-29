@@ -2,6 +2,8 @@ from models import Product
 from models import ProductImage
 from models import db
 
+from sqlalchemy import and_, desc
+
 
 class ProductRepository:
     """The Repository for products modol"""
@@ -26,16 +28,24 @@ class ProductRepository:
         return Product.query.filter_by(id=id).one_or_none()
 
     @staticmethod
-    def get_query_results(*filters, page, page_size, sort, order):
-        sort_by = f"{sort} asc" if order == "a_z" else f"{sort} desc"
-        NAMES = "price category_id condition title".split()
+    def get_query_results(page, page_size, sort_by , **filters):
         res = Product.query
 
-        for name, filt in zip(NAMES, filters):
-            if filt is not None:
-                print(name, filt)
-                res = res.filter_by(**{name: filt})
-        return {"data": res.order_by(db.text(sort_by)).paginate(page=page, per_page=page_size) , "total" : res.count()}
+        for key, value in filters.items():
+            if value:
+                if key == "price" :
+                    res = res.filter(and_(Product.price >= value[0], Product.price <= value[1]))
+                elif key == "categories":
+                    res = res.filter(Product.category_id.in_(value))
+                elif key == "title" :
+                    res = res.filter(Product.title.like(f"%{value}%"))
+                else:
+                    res = res.filter_by(**{key: value})
+        if sort_by:
+            res = res.order_by(getattr(Product, sort_by[0])) if sort_by[1] == "a_z" else res.order_by(
+                desc(getattr(Product, sort_by[0])))
+
+        return {"data": res.paginate(page=page, per_page=page_size) , "total" : res.count()}
 
     @staticmethod
     def update(id, **kwargs):

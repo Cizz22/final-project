@@ -13,3 +13,4 @@ def handle_exception(e):
         return response({"message": error}, 500)
 
     return response({"message": str(e)}, 500) if current_app.debug else response({"message": "Internal Server Error"}, 500)
+
