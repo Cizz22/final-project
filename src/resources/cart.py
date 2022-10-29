@@ -65,10 +65,5 @@ class CartResource(Resource):
 
     @token_required
     def delete(self, id, user_id):
-        try:
-            CartRepository.delete(id)
-        except SQLAlchemyError as e:
-            error = str(e.__dict__['orig'])
-            return response({"message": error}, 500)
-
+        CartRepository.delete(id)
         return response({"message": "Cart deleted"}, 200)

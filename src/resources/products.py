@@ -60,14 +60,10 @@ class ProductsResource(Resource):
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
 
-        try:
-            product = ProductRepository.create(
-                title, price, category_id, condition, product_detail)
+        product = ProductRepository.create(
+            title, price, category_id, condition, product_detail)
 
-            ProductRepository.create_image(*product_images, product_id=product.id)
-        except SQLAlchemyError as e:
-            error = str(e.__dict__['orig'])
-            return response({"message": error}, 500)
+        ProductRepository.create_image(*product_images, product_id=product.id)
 
         return response({"message": "Product added"}, 201)
 
@@ -85,13 +81,9 @@ class ProductsResource(Resource):
                  dest='id', help="Product_id is required"),
     )
     def put(self, id, title, product_detail, condition, category_id, price, product_images):
-        try:
-            ProductRepository.update(
-                id, title=title, price=price, category_id=category_id, condition=condition, product_detail=product_detail)
-            ProductRepository.update_image(*product_images, product_id=id)
-        except SQLAlchemyError as e:
-            error = str(e.__dict__['orig'])
-            return response({"message": error}, 500)
+        ProductRepository.update(
+            id, title=title, price=price, category_id=category_id, condition=condition, product_detail=product_detail)
+        ProductRepository.update_image(*product_images, product_id=id)
 
         return response({"message": "Product updated"}, 201)
 
@@ -109,7 +101,7 @@ class ProductImageSearchResource(Resource):
 class ProductResource(Resource):
     """ Product resource """
 
-    def get(id):
+    def get(self, id):
         """ Get product by id """
         product = ProductRepository.get_by_id(id)
 
@@ -125,11 +117,6 @@ class ProductResource(Resource):
         return response(res, 200)
 
     @token_required
-    def delete(id, user_id):
-        try:
-            ProductRepository.delete(id)
-        except SQLAlchemyError as e:
-            error = str(e.__dict__['orig'])
-            return response({"message": error}, 500)
-
+    def delete(self, id, user_id):
+        ProductRepository.delete(id)
         return response({"message": "Product deleted"}, 201)

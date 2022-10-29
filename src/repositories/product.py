@@ -46,14 +46,15 @@ class ProductRepository:
         return product
 
     @staticmethod
-    def update_image(id, *images_url):
-        product = Product.query.get(id)
-        ProductImage.query.filter_by(product_id=id).delete()
+    def update_image(*images_url, product_id):
+        product = Product.query.get(product_id)
+        ProductImage.query.filter_by(product_id=product_id).delete()
 
         for image_url in images_url:
-            product_image = ProductImage(image=image_url, product_id=id)
+            product_image = ProductImage(image=image_url, product_id=product_id)
             product_image.save()
 
+    @staticmethod
     def delete(id):
         product = Product.query.get(id)
         product.delete()

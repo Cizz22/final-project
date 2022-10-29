@@ -4,7 +4,7 @@ from models import Cart
 class CartRepository():
     @staticmethod
     def get_by_id(id):
-        return Cart.query.filter_by(id=id).one_or_none()
+        return Cart.query.filter_by(id=id).one()
 
     def get_by_product_id(id):
         return Cart.query.filter_by(product_id=id).one_or_none()
