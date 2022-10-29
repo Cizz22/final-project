@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from repositories import CategoryRepository
 from flask_seeder import FlaskSeeder
 
+from utils import handle_exception
+
 import config
 import routes
 from models import db
@@ -29,9 +31,16 @@ migrate = Migrate(server, db)
 seeder = FlaskSeeder()
 seeder.init_app(server, db)
 
+
 @server.route("/")
 def main():
     return "Hello!! check database diagram here https://dbdiagram.io/d/60b86e8bb29a09603d17c2d6"
+
+
+@server.errorhandler(Exception)
+def handle_error(e):
+    return handle_exception(e)
+
 
 for blueprint in vars(routes).values():
     if isinstance(blueprint, Blueprint):
