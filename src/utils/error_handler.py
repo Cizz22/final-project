@@ -9,7 +9,8 @@ def handle_exception(e):
         return response({"message": e.description}, e.code)
 
     if isinstance(e, SQLAlchemyError):
-        error = str(e.__dict__['orig'])
+        error = str(e)
         return response({"message": error}, 500)
 
-    return response({"message": e}, 500) if current_app.debug else response({"message": "Internal Server Error"}, 500)
+    return response({"message": str(e)}, 500) if current_app.debug else response({"message": "Internal Server Error"}, 500)
+

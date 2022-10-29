@@ -14,5 +14,5 @@ Api(PRODUCTS_BLUEPRINT).add_resource(
     ProductImageSearchResource, "/products/image_search"
 )
 Api(PRODUCTS_BLUEPRINT).add_resource(
-    ProductResource, "/products/<int:id>"
+    ProductResource, "/products/<string:id>"
 )

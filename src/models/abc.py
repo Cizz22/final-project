@@ -78,5 +78,5 @@ class BaseModel:
         db.session.delete(self)
         db.session.commit()
 
-    def commit():
+    def commit(self):
         db.session.commit()

@@ -48,25 +48,23 @@ class ProductRepository:
         return {"data": res.paginate(page=page, per_page=page_size) , "total" : res.count()}
 
     @staticmethod
-    def update(id, title, price, category_id, condition, product_detail):
+    def update(id, **kwargs):
         product = Product.query.get(id)
-        product.title = title
-        product.price = price
-        product.category_id = category_id
-        product.condition = condition
-        product.product_detail = product_detail
+        for key, value in kwargs.items():
+            setattr(product, key, value)
         product.commit()
         return product
 
     @staticmethod
-    def update_image(id, *images_url):
-        product = Product.query.get(id)
-        ProductImage.query.filter_by(product_id=id).delete()
+    def update_image(*images_url, product_id):
+        product = Product.query.get(product_id)
+        ProductImage.query.filter_by(product_id=product_id).delete()
 
         for image_url in images_url:
-            product_image = ProductImage(image=image_url, product_id=id)
+            product_image = ProductImage(image=image_url, product_id=product_id)
             product_image.save()
 
+    @staticmethod
     def delete(id):
         product = Product.query.get(id)
         product.delete()
