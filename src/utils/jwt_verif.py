@@ -4,6 +4,7 @@ from flask import request, jsonify, make_response
 import jwt
 from flask import current_app
 
+
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -14,7 +15,8 @@ def token_required(f):
         if not token:
             return make_response(jsonify({'message': 'a valid token is missing'}), 401)
         try:
-            data = jwt.decode(token, current_app.config['SECRET_KEY'])
+            payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+            kwargs.update(user_id=payload['user_id'])
         except:
             return make_response(jsonify({'message': 'token is invalid'}), 401)
 
