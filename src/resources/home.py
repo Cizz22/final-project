@@ -25,7 +25,7 @@ class CategoryResource(Resource):
             "data": [{
                 "id": category.id,
                 "title": category.title,
-                "image": category.products[0].product_images[0].image
+               
             }] for category in categories
         }
 

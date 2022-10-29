@@ -10,3 +10,5 @@ pytest-sugar
 pytest
 flask_bcrypt
 PyJWT
+celery
+Redis

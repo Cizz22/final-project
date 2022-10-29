@@ -10,6 +10,7 @@ services:
       - .:/mnt
     depends_on:
       - db
+      - redis
     ports:
       - 3000:3000
     command: python src/server.py
@@ -26,6 +27,26 @@ services:
       - postgres-vol:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis:/var/lib/redis/data
+
+  worker:
+    env_file:
+      - .env
+    image: python:3.9
+    working_dir: /mnt
+    volumes:
+      - .:/mnt
+    depends_on:
+      - redis
+    command:  python -m celery --app src.server worker --loglevel=DEBUG --logfile=celery.log
 
   testserver:
     env_file: .env
@@ -52,5 +73,6 @@ services:
 volumes:
   postgres-vol:
   postgres-test-vol:
+  redis:
 
 

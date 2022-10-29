@@ -60,11 +60,17 @@ class ProductsResource(Resource):
     @token_required
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
+        from utils import decodeImage
 
         product = ProductRepository.create(
             title, price, category_id, condition, product_detail)
 
-        ProductRepository.create_image(*product_images, product_id=product.id)
+        images = []
+        for i, image in enumerate(product_images, 1):
+            decodeImage.delay(image, f"{product.id}_{i}.jpg")
+            images.append(f"image/{product.id}_{i}.jpg")
+
+        ProductRepository.create_image(*images, product_id=product.id)
 
         return response({"message": "Product added"}, 201)
 
@@ -96,7 +102,11 @@ class ProductImageSearchResource(Resource):
         Argument("image", location="json")
     )
     def post(self, image):
+        from utils import decodeImage
         """ Search product image """
+        decodeImage.delay(image, "test.jpg")
+
+        return response({"message": "Product image search"}, 201)
 
 
 class ProductResource(Resource):
