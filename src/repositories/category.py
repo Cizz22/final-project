@@ -1,6 +1,5 @@
 
-from models import Category
-from . import db
+from models import Category, db
 
 
 class CategoryRepository():
@@ -10,8 +9,8 @@ class CategoryRepository():
         return Category.query.filter(Category.deleted_at == None).all()
 
     @staticmethod
-    def get(id):
-        return Category.query.filter_by(id=id).one()
+    def get_by(**kwargs):
+        return Category.query.filter_by(**kwargs)
 
     @staticmethod
     def create(title, image):

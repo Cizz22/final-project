@@ -21,9 +21,10 @@ class OrderItem(db.Model, BaseModel, metaclass=MetaBaseModel):
     order = db.relationship('Order', back_populates='order_items')
     product = db.relationship('Product', back_populates='order_items')
 
-    def __init__(self, order_id, product_id, quantity, price):
+    def __init__(self, order_id, product_id, quantity, price,size):
         """ Create a new Order Item """
         self.order_id = order_id
         self.product_id = product_id
         self.quantity = quantity
         self.price = price
+        self.size = size

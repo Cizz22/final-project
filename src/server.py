@@ -3,7 +3,7 @@ from flask.blueprints import Blueprint
 from flask_migrate import Migrate
 from flask_seeder import FlaskSeeder
 
-from utils import handle_exception, make_celery
+from utils import handle_exception, celery_app
 
 import config
 import routes
@@ -28,6 +28,10 @@ db.app = server
 
 """Migration Configuration"""
 migrate = Migrate(server, db)
+
+"""Celery Configuration"""
+celery = celery_app.init_app(server)
+
 
 @server.route("/")
 def main():

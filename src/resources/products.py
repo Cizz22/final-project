@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.dialects.postgresql import UUID
 
 from repositories import ProductRepository
-from utils.jwt_verif import token_required
+from utils import token_required, decodeImage
 
 
 class ProductsResource(Resource):
@@ -60,9 +60,8 @@ class ProductsResource(Resource):
     @token_required
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
-        from utils import decodeImage
 
-        is_exist = ProductRepository.get_by_title(title,condition)
+        is_exist = ProductRepository.get_by(title=title, condition=condition).one_or_one()
 
         if is_exist:
             return response({"message": "Product already exist"}, 409)
@@ -73,9 +72,9 @@ class ProductsResource(Resource):
         images = {}
 
         for i, image in enumerate(product_images, 1):
-            images.update({f"{product.title}_{product.id}_{i}": image})
+            images.update({f"{product.title}_{product.id}_{i}.jpg": image})
 
-        decodeImage.delay(images)
+        decodeImage(images)
 
         ProductRepository.create_image(images.keys(), product_id=product.id)
 
@@ -109,9 +108,7 @@ class ProductImageSearchResource(Resource):
         Argument("image", location="json")
     )
     def post(self, image):
-        from utils import decodeImage
         """ Search product image """
-        decodeImage.delay(image, "test.jpg")
 
         return response({"message": "Product image search"}, 201)
 
@@ -121,7 +118,10 @@ class ProductResource(Resource):
 
     def get(self, id):
         """ Get product by id """
-        product = ProductRepository.get_by_id(id)
+        product = ProductRepository.get_by(id=id).one_or_none()
+
+        if product is None:
+            return response({"message": "Product not found"}, 404)
 
         res = {
             "id": product.json['id'],

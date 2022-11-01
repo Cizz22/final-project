@@ -14,7 +14,7 @@ class CartsResource(Resource):
     @token_required
     def get(self, user_id):
         """Get cart"""
-        items = CartRepository.get_by_user_id(user_id)
+        items = CartRepository.get_by(user_id=user_id).all()
 
         res = [
             {
@@ -41,7 +41,7 @@ class CartsResource(Resource):
     )
     @token_required
     def post(self, product_id, quantity, size, user_id):
-        cartItem = CartRepository.get_by_id_size(product_id, size)
+        cartItem = CartRepository.get_by(product_id=product_id, size=size).one_or_none()
 
         if cartItem:
             quantity = cartItem.quantity + quantity
@@ -50,7 +50,7 @@ class CartsResource(Resource):
 
             return response({"message": "Item added to cart"}, 200)
 
-        product = ProductRepository.get_by_id(product_id)
+        product = ProductRepository.get_by(id=product_id).one_or_none()
 
         if not product:
             return response({"message": "Product not found"}, 404)

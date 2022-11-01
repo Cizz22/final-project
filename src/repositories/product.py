@@ -6,15 +6,15 @@ from sqlalchemy import and_, desc
 
 
 class ProductRepository:
-    """The Repository for products modol"""
+    """The Repository for products model"""
 
     @staticmethod
     def get_all():
         return Product.query.all()
 
     @staticmethod
-    def get_by_title(title, condition):
-        return Product.query.filter_by(title=title, condition=condition).one_or_none()
+    def get_by(**kwargs):
+        return Product.query.filter_by(**kwargs)
 
     @staticmethod
     def create(title, price, category_id, condition, product_detail):
@@ -27,10 +27,6 @@ class ProductRepository:
             url = "image/" + image_url
             product_image = ProductImage(image=url, product_id=product_id)
             product_image.save()
-
-    @staticmethod
-    def get_by_id(id):
-        return Product.query.filter_by(id=id).one_or_none()
 
     @staticmethod
     def get_query_results(page, page_size, sort_by , **filters):
