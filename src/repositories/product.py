@@ -34,7 +34,7 @@ class ProductRepository:
 
     @staticmethod
     def get_query_results(page, page_size, sort_by , **filters):
-        res = Product.query
+        res = Product.query.filter(Product.deleted_at == None)
 
         for key, value in filters.items():
             if value:
@@ -72,7 +72,8 @@ class ProductRepository:
     @staticmethod
     def delete(id):
         product = Product.query.get(id)
-        product.delete()
+        product.deleted_at = db.func.now()
+        product.commit()
 
     @staticmethod
     def rollback():
