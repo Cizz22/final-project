@@ -60,7 +60,6 @@ class ProductsResource(Resource):
     @token_required
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
-        from utils import decodeImage
 
         product = ProductRepository.get_by(title=title, condition=condition).one_or_one()
 
@@ -113,9 +112,7 @@ class ProductImageSearchResource(Resource):
         Argument("image", location="json")
     )
     def post(self, image):
-        from utils import decodeImage
         """ Search product image """
-        decodeImage.delay(image, "test.jpg")
 
         return response({"message": "Product image search"}, 201)
 
