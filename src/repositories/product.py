@@ -13,14 +13,19 @@ class ProductRepository:
         return Product.query.all()
 
     @staticmethod
+    def get_by_title(title, condition):
+        return Product.query.filter_by(title=title, condition=condition).one_or_none()
+
+    @staticmethod
     def create(title, price, category_id, condition, product_detail):
         product = Product(title, price, category_id, condition, product_detail)
         return product.save()
 
     @staticmethod
-    def create_image(*images_url, product_id):
+    def create_image(images_url, product_id):
         for image_url in images_url:
-            product_image = ProductImage(image=image_url, product_id=product_id)
+            url = "image/" + image_url
+            product_image = ProductImage(image=url, product_id=product_id)
             product_image.save()
 
     @staticmethod

@@ -17,7 +17,7 @@ server.stop: ## Start server in its docker container
 	docker-compose stop
 
 server.storage: ## make storage file
-	docker-compose run server bash -c "mkdir -p static/images"
+	docker-compose run server bash -c "mkdir -p static/image"
 
 server.logs: ## Display server logs
 	tail -f server.log

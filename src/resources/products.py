@@ -62,15 +62,22 @@ class ProductsResource(Resource):
         """ Create a new product """
         from utils import decodeImage
 
+        is_exist = ProductRepository.get_by_title(title,condition)
+
+        if is_exist:
+            return response({"message": "Product already exist"}, 409)
+
         product = ProductRepository.create(
             title, price, category_id, condition, product_detail)
 
-        images = []
-        for i, image in enumerate(product_images, 1):
-            decodeImage.delay(image, f"{product.id}_{i}.jpg")
-            images.append(f"image/{product.id}_{i}.jpg")
+        images = {}
 
-        ProductRepository.create_image(*images, product_id=product.id)
+        for i, image in enumerate(product_images, 1):
+            images.update({f"{product.title}_{product.id}_{i}": image})
+
+        decodeImage.delay(images)
+
+        ProductRepository.create_image(images.keys(), product_id=product.id)
 
         return response({"message": "Product added"}, 201)
 

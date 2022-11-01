@@ -5,7 +5,7 @@ worker.daemon: ## Start daemon worker in its docker container
 		docker-compose up -d worker
 
 worker.logs: ## Display worker logs
-		tail -f worker.log
+		tail -f celery.log
 
 worker.bash: ## Connect to worker to lauch commands
 		docker-compose exec worker bash
