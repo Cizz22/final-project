@@ -58,7 +58,7 @@ class SignupResource(Resource):
         """ Signup """
 
         if UserRepository.get_by_email(email) is not None:
-            return response({"error": "Email is already registered"}, 409)
+            return response({"message": "Error, user already exists"}, 409)
 
         UserRepository.create(name, email, phone_number, password, type)
         return response({"message": "Success, user created"}, 201)

@@ -2,7 +2,6 @@ from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
 from repositories import CategoryRepository
-from flask_seeder import FlaskSeeder
 
 from utils import handle_exception
 
@@ -26,11 +25,6 @@ db.app = server
 
 """Migration Configuration"""
 migrate = Migrate(server, db)
-
-"""Seeder Configuration"""
-seeder = FlaskSeeder()
-seeder.init_app(server, db)
-
 
 @server.route("/")
 def main():
