@@ -1,5 +1,4 @@
 from models import Cart
-from utils import celery_app
 
 
 class CartRepository():
