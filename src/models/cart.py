@@ -30,3 +30,4 @@ class Cart(db.Model, BaseModel, metaclass=MetaBaseModel):
         self.quantity = quantity
         self.size = size
         self.price = price
+        

@@ -1,13 +1,14 @@
 from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
-from repositories import CategoryRepository
+from flask_seeder import FlaskSeeder
 
-from utils import handle_exception
+from utils import handle_exception, celery_app
 
 import config
 import routes
 from models import db
+
 
 """Create an application."""
 server = Flask(__name__)
@@ -18,6 +19,8 @@ server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
 server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
 server.config["SECRET_KEY"] = config.SECRET_KEY
 server.config["IMAGE_URL"] = config.IMAGE_URL
+server.config["CELERY_CONFIG"] = config.CELERY_CONFIG
+
 
 """Database Configuration"""
 db.init_app(server)
@@ -26,9 +29,13 @@ db.app = server
 """Migration Configuration"""
 migrate = Migrate(server, db)
 
+"""Celery Configuration"""
+celery = celery_app.init_app(server)
+
+
 @server.route("/")
 def main():
-    return "Hello!! check database diagram here https://dbdiagram.io/d/60b86e8bb29a09603d17c2d6"
+    return "oke"
 
 
 @server.errorhandler(Exception)

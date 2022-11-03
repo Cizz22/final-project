@@ -19,6 +19,12 @@ POSTGRES = {
 }
 DB_URI = "postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
 
+CELERY_CONFIG = {
+    'broker_url': 'redis://redis:6379/0',
+    'result_backend': 'redis://redis:6379/0',
+    'include': ['src.utils.decode_image', 'src.models'],
+}
+
 logging.basicConfig(
     filename=os.getenv("SERVICE_LOG", "server.log"),
     level=logging.DEBUG,

@@ -6,11 +6,15 @@ from sqlalchemy import and_, desc
 
 
 class ProductRepository:
-    """The Repository for products modol"""
+    """The Repository for products model"""
 
     @staticmethod
     def get_all():
         return Product.query.all()
+
+    @staticmethod
+    def get_by(**kwargs):
+        return Product.query.filter_by(**kwargs)
 
     @staticmethod
     def create(title, price, category_id, condition, product_detail):
@@ -18,18 +22,15 @@ class ProductRepository:
         return product.save()
 
     @staticmethod
-    def create_image(*images_url, product_id):
+    def create_image(images_url, product_id):
         for image_url in images_url:
-            product_image = ProductImage(image=image_url, product_id=product_id)
+            url = "image/" + image_url
+            product_image = ProductImage(image=url, product_id=product_id)
             product_image.save()
 
     @staticmethod
-    def get_by_id(id):
-        return Product.query.filter_by(id=id).one_or_none()
-
-    @staticmethod
     def get_query_results(page, page_size, sort_by , **filters):
-        res = Product.query
+        res = Product.query.filter(Product.deleted_at == None)
 
         for key, value in filters.items():
             if value:
@@ -49,7 +50,7 @@ class ProductRepository:
 
     @staticmethod
     def update(id, **kwargs):
-        product = Product.query.get(id)
+        product = Product.query.get_by(id=id).one_or_none()
         for key, value in kwargs.items():
             setattr(product, key, value)
         product.commit()
@@ -57,18 +58,16 @@ class ProductRepository:
 
     @staticmethod
     def update_image(*images_url, product_id):
-        product = Product.query.get(product_id)
-        ProductImage.query.filter_by(product_id=product_id).delete()
+        [image.delete() for image in ProductImage.query.filter_by(product_id=product_id).all()]
 
         for image_url in images_url:
-            product_image = ProductImage(image=image_url, product_id=product_id)
+            url = "image/" + image_url
+            product_image = ProductImage(image=url, product_id=product_id)
             product_image.save()
 
     @staticmethod
     def delete(id):
         product = Product.query.get(id)
-        product.delete()
+        product.deleted_at = db.func.now()
+        product.commit()
 
-    @staticmethod
-    def rollback():
-        db.session.rollback()

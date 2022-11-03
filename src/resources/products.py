@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.dialects.postgresql import UUID
 
 from repositories import ProductRepository
-from utils.jwt_verif import token_required
+from utils import token_required, decodeImage
 
 
 class ProductsResource(Resource):
@@ -61,10 +61,26 @@ class ProductsResource(Resource):
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
 
-        product = ProductRepository.create(
-            title, price, category_id, condition, product_detail)
+        product = ProductRepository.get_by(title=title, condition=condition).one_or_one()
 
-        ProductRepository.create_image(*product_images, product_id=product.id)
+        if product and product.deleted_at is None:
+            return response({"message": "Product already exist"}, 409)
+
+        if product.deleted_at is not None:
+            ProductRepository.update(product.id, title=title, product_detail=product_detail, condition=condition,
+                                     category_id=category_id, price=price, product_images=product_images, deleted_at=None)
+        else:
+            product = ProductRepository.create(
+                title, price, category_id, condition, product_detail)
+
+        images = {}
+
+        for i, image in enumerate(product_images, 1):
+            images.update({f"{product.title}_{product.id}_{i}.jpg": image})
+
+        decodeImage(images)
+
+        ProductRepository.create_image(images.keys(), product_id=product.id)
 
         return response({"message": "Product added"}, 201)
 
@@ -98,13 +114,18 @@ class ProductImageSearchResource(Resource):
     def post(self, image):
         """ Search product image """
 
+        return response({"message": "Product image search"}, 201)
+
 
 class ProductResource(Resource):
     """ Product resource """
 
     def get(self, id):
         """ Get product by id """
-        product = ProductRepository.get_by_id(id)
+        product = ProductRepository.get_by(id=id).one_or_none()
+
+        if product is None:
+            return response({"message": "Product not found"}, 404)
 
         res = {
             "id": product.json['id'],
