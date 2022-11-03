@@ -28,9 +28,9 @@ class OrdersResource(Resource):
         for cart in user_carts:
             total_price += cart.price
 
-        # user = UserRepository.get_by_id(user_id)
-        # if user.balance < total_price:
-        #     return response({"message": "Insufficient balance"}, 400)
+        user = UserRepository.get_by_id(user_id)
+        if user.balance < total_price:
+            return response({"message": "Insufficient balance"}, 400)
 
         shipping_fee = get_shipping_fee(total_price, shipping_method)
 

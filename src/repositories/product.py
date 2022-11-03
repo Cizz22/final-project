@@ -50,7 +50,7 @@ class ProductRepository:
 
     @staticmethod
     def update(id, **kwargs):
-        product = Product.query.get(id)
+        product = Product.query.get_by(id=id).one_or_none()
         for key, value in kwargs.items():
             setattr(product, key, value)
         product.commit()
@@ -58,11 +58,11 @@ class ProductRepository:
 
     @staticmethod
     def update_image(*images_url, product_id):
-        product = Product.query.get(product_id)
-        ProductImage.query.filter_by(product_id=product_id).delete()
+        [image.delete() for image in ProductImage.query.filter_by(product_id=product_id).all()]
 
         for image_url in images_url:
-            product_image = ProductImage(image=image_url, product_id=product_id)
+            url = "image/" + image_url
+            product_image = ProductImage(image=url, product_id=product_id)
             product_image.save()
 
     @staticmethod
@@ -71,6 +71,3 @@ class ProductRepository:
         product.deleted_at = db.func.now()
         product.commit()
 
-    @staticmethod
-    def rollback():
-        db.session.rollback()

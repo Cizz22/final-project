@@ -61,13 +61,17 @@ class ProductsResource(Resource):
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
 
-        is_exist = ProductRepository.get_by(title=title, condition=condition).one_or_one()
+        product = ProductRepository.get_by(title=title, condition=condition).one_or_one()
 
-        if is_exist:
+        if product and product.deleted_at is None:
             return response({"message": "Product already exist"}, 409)
 
-        product = ProductRepository.create(
-            title, price, category_id, condition, product_detail)
+        if product.deleted_at is not None:
+            ProductRepository.update(product.id, title=title, product_detail=product_detail, condition=condition,
+                                     category_id=category_id, price=price, product_images=product_images, deleted_at=None)
+        else:
+            product = ProductRepository.create(
+                title, price, category_id, condition, product_detail)
 
         images = {}
 
