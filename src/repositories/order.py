@@ -1,7 +1,5 @@
 """Order Repository"""
 from models import Order, db, OrderItem
-from repositories import CartRepository
-from utils import celery_app
 
 
 class OrderRepository():
