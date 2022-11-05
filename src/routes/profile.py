@@ -4,7 +4,7 @@ Defines the blueprint for the profile page
 from flask import Blueprint
 from flask_restful import Api
 
-from resources import UserResource, ShippingAddressResource, BalanceResource
+from resources import UserResource, ShippingAddressResource, BalanceResource, SalesResource
 
 PROFILE_BLUEPRINT = Blueprint("profile", __name__)
 
@@ -18,4 +18,8 @@ Api(PROFILE_BLUEPRINT).add_resource(
 
 Api(PROFILE_BLUEPRINT).add_resource(
     BalanceResource, "/user/balance"
+)
+
+Api(PROFILE_BLUEPRINT).add_resource(
+    SalesResource, "/sales"
 )

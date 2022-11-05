@@ -85,6 +85,12 @@ class BalanceResource(Resource):
         """ Top up Balance """
 
         user = UserRepository.get_by_id(user_id)
+
+        if user.type != "buyer":
+            res = {
+                "error": "User is not a buyer"
+            }
+            return response(res, 400)
         
         balance = user.balance + amount
         
@@ -102,8 +108,39 @@ class BalanceResource(Resource):
 
         user = UserRepository.get_by_id(user_id)
 
+        if user.type != "buyer":
+            res = {
+                "error": "User is not a buyer"
+            }
+            return response(res, 400)
+        
         data = {
             "balance": user.balance
+        }
+
+        res = {
+            "data": data
+        }
+
+        return response(res, 200)
+
+class SalesResource(Resource):
+    """ Sales Resource """
+
+    @token_required
+    def get(self, user_id):
+        """ Get Total Sales """
+
+        user = UserRepository.get_by_id(user_id)
+
+        if user.type != "seller":
+            res = {
+                "error": "User is not a seller"
+            }
+            return response(res, 400)
+
+        data = {
+            "total": user.balance
         }
 
         res = {
