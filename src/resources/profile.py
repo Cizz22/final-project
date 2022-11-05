@@ -24,8 +24,8 @@ class UserResource(Resource):
 
         return response(res, 200)
 
-class BalanceResource(Resource):
-    """ Balance Resource """
+class ShippingAddressResource(Resource):
+    """ Shipping Address Resource """
 
     @parse_params(
         Argument("name", location="json", required=True, help="Name cannot be blank.", dest="address_name"),
