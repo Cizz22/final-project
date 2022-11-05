@@ -53,6 +53,26 @@ class ShippingAddressResource(Resource):
         }
 
         return response(res, 200)
+    
+    @token_required
+    def get(self, user_id):
+        """ Get User Shipping Address """
+
+        user = UserRepository.get_by_id(user_id)
+
+        data = {
+            "id": user.id,
+            "name": user.address_name,
+            "phone_number": user.phone_number,
+            "address": user.address,
+            "city": user.city
+        }
+
+        res = {
+            "data": data
+        }
+
+        return response(res, 200)
 
 class BalanceResource(Resource):
     """ Balance Resource """
