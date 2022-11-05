@@ -1,11 +1,7 @@
 from flask_restful import Resource
 from flask_restful.reqparse import Argument
-from utils import parse_params, response
-from utils import create_token
-
+from utils import parse_params, response, create_token
 from repositories import UserRepository
-from utils.jwt_verif import token_required
-
 
 class SigninResource(Resource):
     """ Signin resource """

@@ -8,6 +8,5 @@ from .cart import Cart
 from .product_images import ProductImage
 from .category import Category
 from .order import Order
-from .user_addresses import UserAddress
 from .banner import Banner
 from .order_items import OrderItem
