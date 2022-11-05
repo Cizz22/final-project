@@ -17,6 +17,9 @@ class User(db.Model, BaseModel, metaclass=MetaBaseModel):
     email = db.Column(db.String(300), nullable=False, unique=True)
     password = db.Column(db.String(300), nullable=False)
     phone_number = db.Column(db.String(300), nullable=True)
+    address_name = db.Column(db.String(300), nullable=True)
+    address = db.Column(db.String(300), nullable=True)
+    city = db.Column(db.String(300), nullable=True)
     type = db.Column(db.String(300), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
@@ -24,7 +27,6 @@ class User(db.Model, BaseModel, metaclass=MetaBaseModel):
     
     orders = db.relationship('Order', back_populates='user', lazy=True)
     carts = db.relationship('Cart', back_populates='user', lazy=True)
-    user_addresses = db.relationship('UserAddress', back_populates = 'user', lazy=True)
 
     def __init__(self, name, email, phone_number, type):
         """ Create a new User """

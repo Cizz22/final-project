@@ -28,5 +28,21 @@ class UserRepository:
         """ Query a user by email """
         return User.query.filter_by(email=email).one_or_none()
 
+    @staticmethod
+    def update(id, **columns):
+        """ Update user information """
+        
+        user = UserRepository.get_by_id(id)
+        
+        if user:
+            for key, value in columns.items():
+                setattr(user, key, value)
+            
+            user.commit()
+        
+        return user
+
+
+
     
         
