@@ -54,3 +54,40 @@ class ShippingAddressResource(Resource):
 
         return response(res, 200)
 
+class BalanceResource(Resource):
+    """ Balance Resource """
+
+    @parse_params(
+        Argument("amount", location="json", required=True, help="Amount cannot be blank.", type=int)
+    )
+    @token_required
+    def post(self, user_id, amount):
+        """ Top up Balance """
+
+        user = UserRepository.get_by_id(user_id)
+        
+        balance = user.balance + amount
+        
+        UserRepository.update(user_id, balance=balance)
+
+        res = {
+            "message": "Top up balance success"
+        }
+
+        return response(res, 200)
+
+    @token_required
+    def get(self, user_id):
+        """ Get User Balance """
+
+        user = UserRepository.get_by_id(user_id)
+
+        data = {
+            "balance": user.balance
+        }
+
+        res = {
+            "data": data
+        }
+
+        return response(res, 200)
