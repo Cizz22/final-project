@@ -22,6 +22,7 @@ class Order(db.Model, BaseModel, metaclass=MetaBaseModel):
     
     user = db.relationship('User', back_populates='orders')
     order_items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan")
+    order_address = db.relationship('OrderAddress', back_populates='order')
 
     def __init__(self, user_id, shipping_method, shipping_fee, subtotal, total_price):
         """ Create a new User """
