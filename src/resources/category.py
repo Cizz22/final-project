@@ -52,3 +52,37 @@ class CategoriesResource(Resource):
         }
 
         return response(res, 201)
+
+class CategoryResource(Resource):
+    """ Category Resource """
+
+    @parse_params(
+        Argument("category_name", location="json", required=True, help="Category name is required")
+    )
+    @token_required
+    def put(self, id, user_id, category_name):
+        """ Update Category """
+
+        user = UserRepository.get_by_id(user_id)
+
+        if user.type != "seller":
+            return response({
+                "error": "User is not a seller"
+            }, 400)
+        
+        category = CategoryRepository.get_by(title=category_name).one_or_none()
+
+        if category is not None:
+            return response({
+                "error": "Category is already exists"
+            }, 400)
+
+        
+        CategoryRepository.update(id, title=category_name)
+
+        res = {
+            "message": "Category updated"
+        }
+
+        return response(res, 200)
+

@@ -22,3 +22,11 @@ class CategoryRepository():
         category = Category.query.get(id)
         category.deleted_at = db.func.now()
         category.commit()
+
+    @staticmethod
+    def update(id, **kwargs):
+        category = CategoryRepository.get_by(id=id).one()
+        for key, value in kwargs.items():
+            setattr(category, key, value)
+        category.commit()
+        return category
