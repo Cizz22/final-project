@@ -86,3 +86,24 @@ class CategoryResource(Resource):
 
         return response(res, 200)
 
+    @token_required
+    def delete(self, id, user_id):
+        """" Delete Category """
+
+        user = UserRepository.get_by_id(user_id)
+
+        if user.type != "seller":
+            return response({
+                "error": "User is not a seller"
+            }, 400)
+
+        CategoryRepository.delete(id)
+
+        res = {
+            "message": "Category deleted"
+        }
+
+        return response(res, 200)
+
+
+
