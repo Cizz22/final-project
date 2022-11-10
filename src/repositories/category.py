@@ -13,8 +13,8 @@ class CategoryRepository():
         return Category.query.filter_by(**kwargs)
 
     @staticmethod
-    def create(title, image):
-        category = Category(title=title, image=image)
+    def create(title):
+        category = Category(title=title)
         return category.save()
 
     @staticmethod
