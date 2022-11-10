@@ -1,10 +1,9 @@
 from flask_restful import Resource
-from models import order
 from utils import parse_params, response
 from flask_restful.reqparse import Argument
 
 from utils import parse_params, response, token_required, get_shipping_fee, admin_required
-from repositories import OrderRepository, CartRepository, UserRepository
+from repositories import OrderRepository, CartRepository, UserRepository, OrderAddressRepository
 
 
 class OrdersResource(Resource):
@@ -37,6 +36,8 @@ class OrdersResource(Resource):
         order = OrderRepository.create(user_id, total_price, shipping_fee , shipping_method)
 
         OrderRepository.create_order_item(user_carts, order.id)
+
+        OrderAddressRepository.create(order.id, shipping_address)
 
         CartRepository.delete_all(user_carts)
 

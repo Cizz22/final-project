@@ -22,11 +22,10 @@ class OrderAddress(db.Model, BaseModel, metaclass=MetaBaseModel):
 
     order = db.relationship('Order', back_populates='order_addresses')
 
-    def __init__(self, user_id, order_id, address, city, state, country):
+    def __init__(self, order_id, address, city, name, phone_number):
         """ Create a new User """
-        self.user_id = user_id
         self.order_id = order_id
+        self.name = name
         self.address = address
+        self.phone_number = phone_number
         self.city = city
-        self.state = state
-        self.country = country
