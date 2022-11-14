@@ -1,10 +1,9 @@
 from flask_restful import Resource
-from models import order
 from utils import parse_params, response
 from flask_restful.reqparse import Argument
 
-from utils import parse_params, response, token_required, get_shipping_fee
-from repositories import OrderRepository, CartRepository, UserRepository
+from utils import parse_params, response, token_required, get_shipping_fee, admin_required
+from repositories import OrderRepository, CartRepository, UserRepository, OrderAddressRepository
 
 
 class OrdersResource(Resource):
@@ -38,9 +37,46 @@ class OrdersResource(Resource):
 
         OrderRepository.create_order_item(user_carts, order.id)
 
+        OrderAddressRepository.create(order.id, shipping_address)
+
         CartRepository.delete_all(user_carts)
 
         return response({"message": "Order Created"}, 201)
+
+    @parse_params(
+        Argument("sort_by", location="args", required=False),
+        Argument("page", location="args", required=False, default=1),
+        Argument("page_size", location="args", required=False, default=10),
+        Argument("is_admin", location="args", required=False),
+    )
+    @admin_required
+    def get(self, sort_by, page, page_size, is_admin, user_id):
+        """Get all orders"""
+
+        orders = OrderRepository.get_query(sort_by, page, page_size)
+
+        res = [
+            {
+                "id": order.id,
+                "created_at": order.created_at,
+                "shipping_method": order.shipping_method,
+                "status": order.status,
+                "user_id": order.user_id,
+                "email": order.user.email,
+                "products": [{
+                    "id": item.product.id,
+                    "details": {
+                        "quantity": item.quantity,
+                        "size": item.size,
+                    },
+                    "price": item.price,
+                    "image": [image.image for image in item.product.product_images],
+                    "name":item.product.title,
+                } for item in order.order_items],
+            } for order in orders['data']
+        ]
+
+        return response(res, 200)
 
 
 class OrderResource(Resource):

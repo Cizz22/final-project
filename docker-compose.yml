@@ -46,14 +46,14 @@ services:
       - .:/mnt
     depends_on:
       - redis
-    command:  python -m celery --app src.server worker --loglevel=DEBUG --logfile=celery.log
+    command: python -m celery --app src.server worker --loglevel=DEBUG --logfile=celery.log
 
   testserver:
     env_file: .env
     image: python:3.9
     working_dir: /mnt
     volumes:
-      - postgres-test-vol
+      - postgres-test-vol:/var/lib/postgresql/data
     depends_on:
       - testdb
     ports:

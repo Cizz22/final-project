@@ -7,3 +7,4 @@ from .orders import OrdersResource, OrderResource
 from .shipping_price import ShippingPriceResource
 from .profile import UserResource, ShippingAddressResource, BalanceResource, SalesResource
 from .category import CategoriesResource, CategoryResource
+

@@ -1,6 +1,5 @@
 from models import Cart
 
-
 class CartRepository():
     @staticmethod
     def get_by(**kwargs):
