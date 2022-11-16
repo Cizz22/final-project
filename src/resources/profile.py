@@ -1,11 +1,12 @@
 from flask_restful import Resource
 from flask_restful.reqparse import Argument
-from utils import parse_params, response, token_required
+from utils import parse_params, response, token_required, admin_required
 from repositories import UserRepository
+
 
 class UserResource(Resource):
     """ Profile Resource """
-    
+
     @token_required
     def get(self, user_id):
         """ Get User Details """
@@ -24,21 +25,25 @@ class UserResource(Resource):
 
         return response(res, 200)
 
+
 class ShippingAddressResource(Resource):
     """ Shipping Address Resource """
 
     @parse_params(
-        Argument("name", location="json", required=True, help="Name cannot be blank.", dest="address_name"),
-        Argument("phone_number", location="json", required=True, help="Phone number cannot be blank."),
+        Argument("name", location="json", required=True,
+                 help="Name cannot be blank.", dest="address_name"),
+        Argument("phone_number", location="json", required=True,
+                 help="Phone number cannot be blank."),
         Argument("address", location="json", required=True, help="Address cannot be blank."),
         Argument("city", location="json", required=True, help="City cannot be blank.")
     )
     @token_required
     def post(self, user_id, address_name, phone_number, address, city):
         """ Change shipping address """
-        
-        UserRepository.update(user_id, address_name=address_name, phone_number=phone_number, address=address, city=city)
-        
+
+        UserRepository.update(user_id, address_name=address_name,
+                              phone_number=phone_number, address=address, city=city)
+
         user = UserRepository.get_by_id(user_id)
 
         data = {
@@ -53,7 +58,7 @@ class ShippingAddressResource(Resource):
         }
 
         return response(res, 200)
-    
+
     @token_required
     def get(self, user_id):
         """ Get User Shipping Address """
@@ -74,11 +79,13 @@ class ShippingAddressResource(Resource):
 
         return response(res, 200)
 
+
 class BalanceResource(Resource):
     """ Balance Resource """
 
     @parse_params(
-        Argument("amount", location="json", required=True, help="Amount cannot be blank.", type=int)
+        Argument("amount", location="json", required=True,
+                 help="Amount cannot be blank.", type=int)
     )
     @token_required
     def post(self, user_id, amount):
@@ -91,9 +98,9 @@ class BalanceResource(Resource):
                 "error": "User is not a buyer"
             }
             return response(res, 400)
-        
+
         balance = user.balance + amount
-        
+
         UserRepository.update(user_id, balance=balance)
 
         res = {
@@ -113,7 +120,7 @@ class BalanceResource(Resource):
                 "error": "User is not a buyer"
             }
             return response(res, 400)
-        
+
         data = {
             "balance": user.balance
         }
@@ -124,10 +131,11 @@ class BalanceResource(Resource):
 
         return response(res, 200)
 
+
 class SalesResource(Resource):
     """ Sales Resource """
 
-    @token_required
+    @admin_required
     def get(self, user_id):
         """ Get Total Sales """
 
