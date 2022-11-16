@@ -34,7 +34,7 @@ class TestBanner(unittest.TestCase):
 
 
 class TestCategory(unittest.TestCase):
-    @ classmethod
+    @classmethod
     def setUpClass(cls):
         server.config['SERVER_NAME'] = 'localhost:5053'
         cls.client = server.test_client()

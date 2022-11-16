@@ -50,14 +50,15 @@ class ProductRepository:
 
     @staticmethod
     def update(id, **kwargs):
-        product = Product.query.get_by(id=id).one_or_none()
+        product = Product.query.get(id)
         for key, value in kwargs.items():
-            setattr(product, key, value)
+            if value is not None:
+                setattr(product, key, value)
         product.commit()
         return product
 
     @staticmethod
-    def update_image(*images_url, product_id):
+    def update_image(images_url, product_id):
         [image.delete() for image in ProductImage.query.filter_by(product_id=product_id).all()]
 
         for image_url in images_url:
@@ -70,4 +71,3 @@ class ProductRepository:
         product = Product.query.get(id)
         product.deleted_at = db.func.now()
         product.commit()
-
