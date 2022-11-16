@@ -1,4 +1,4 @@
-from .home import BannerResource
+from .home import HomeBannerResource, HomeCategoryResource
 from .authentication import SigninResource, SignupResource
 from .products import ProductsResource, ProductResource, ProductImageSearchResource
 from .universal import ImageResource
