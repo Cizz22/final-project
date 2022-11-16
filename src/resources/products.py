@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.dialects.postgresql import UUID
 
 from repositories import ProductRepository
-from utils import token_required, decodeImage
+from utils import token_required, decodeImage, admin_required
 
 
 class ProductsResource(Resource):
@@ -57,7 +57,7 @@ class ProductsResource(Resource):
                  dest='product_images', help="Images is required"),
 
     )
-    @token_required
+    @admin_required
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
 
@@ -115,6 +115,7 @@ class ProductImageSearchResource(Resource):
         """ Search product image """
 
         return response({"message": "Product image search"}, 201)
+
 
 class ProductResource(Resource):
     """ Product resource """

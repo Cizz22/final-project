@@ -53,7 +53,7 @@ services:
     image: python:3.9
     working_dir: /mnt
     volumes:
-      - postgres-test-vol:/var/lib/postgresql/data
+      - .:/mnt
     depends_on:
       - testdb
     ports:
