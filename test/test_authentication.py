@@ -26,7 +26,45 @@ class TestSignIn(unittest.TestCase):
         self.app_context.pop()
 
     def test_post(self):
-        pass
+        
+        user_data = {
+            "name": "test",
+            "email": "test@email.com",
+            "phone_number": "081234567890",
+            "password": "password",
+            "type": "buyer"
+        }
+        
+        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
+
+        response = self.client.post(
+            "/sign-in",
+            data = json.dumps({
+                "email": user_data["email"],
+                "password": user_data["password"]
+            }),
+            content_type = "application/json"
+        )
+
+        response_json = json.loads(response.data.decode("utf-8"))
+        token = response_json['token']
+
+        user_information = {
+            "name": user_data["name"],
+            "email": user_data["email"],
+            "phone_number": user_data["phone_number"],
+            "type": user_data["type"]
+        }
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_json,
+            {
+                "user_information": user_information,
+                "token": token,
+                "message": "Login success"
+            }
+        )
 
 
 class TestSignUp(unittest.TestCase):
@@ -46,4 +84,6 @@ class TestSignUp(unittest.TestCase):
         self.app_context.pop()
 
     def test_post(self):
-        pass      
+        pass
+
+
