@@ -1,7 +1,6 @@
 import json
 import unittest
 
-from models import Category, Banner
 from models.abc import db
 from repositories import BannerRepository, CategoryRepository
 from server import server
@@ -30,8 +29,7 @@ class TestBanner(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             json.loads(response.data.decode("utf-8")),
-            {"data" : [{"id": str(banner.json['id']), "title":"test", "image": "test",
-                        "created_at":banner.json['created_at'], "deleted_at":banner.json['deleted_at']}]},
+            {"data" : [{"id": str(banner.json['id']), "title":"test"}, ]}
         )
 
 
@@ -52,13 +50,12 @@ class TestCategory(unittest.TestCase):
         self.app_context.pop()
 
     def test_get(self):
-        category = CategoryRepository.create("test", "test")
+        category = CategoryRepository.create("test")
 
         response = self.client.get("/home/category")
         response_json = json.loads(response.data.decode("utf-8"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response_json,
-            {"data": [{"id": str(category.json['id']), "title":"test", "image": "test",
-                        "created_at":category.json['created_at'], "deleted_at":category.json['deleted_at'], "products": category.json['products']}]}
+            {"data": [{"id": str(category.json['id']), "title":"test"}]}
         )

@@ -4,9 +4,11 @@ from utils import parse_params
 from flask_restful.reqparse import Argument
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.dialects.postgresql import UUID
+from datetime import datetime
+
 
 from repositories import ProductRepository
-from utils import token_required, decodeImage
+from utils import token_required, decodeImage, admin_required
 
 
 class ProductsResource(Resource):
@@ -57,18 +59,19 @@ class ProductsResource(Resource):
                  dest='product_images', help="Images is required"),
 
     )
-    @token_required
+    @admin_required
     def post(self, title, product_detail, condition, category_id, price, product_images, user_id):
         """ Create a new product """
 
-        product = ProductRepository.get_by(title=title, condition=condition).one_or_one()
+        product = ProductRepository.get_by(title=title, condition=condition).first()
 
-        if product and product.deleted_at is None:
-            return response({"message": "Product already exist"}, 409)
+        if product is not None:
+            if product.deleted_at is None:
+                return response({"message": "Product already exist"}, 409)
+            else:
+                product = ProductRepository.update(product.id, title=title, product_detail=product_detail, condition=condition,
+                                                   category_id=category_id, price=price, product_images=product_images, deleted_at=None)
 
-        if product.deleted_at is not None:
-            ProductRepository.update(product.id, title=title, product_detail=product_detail, condition=condition,
-                                     category_id=category_id, price=price, product_images=product_images, deleted_at=None)
         else:
             product = ProductRepository.create(
                 title, price, category_id, condition, product_detail)
@@ -76,7 +79,10 @@ class ProductsResource(Resource):
         images = {}
 
         for i, image in enumerate(product_images, 1):
-            images.update({f"{product.title}_{product.id}_{i}.jpg": image})
+            base = image.split(",")[1]
+            type = image.split(",")[0].split("/")[1].split(";")[0]
+            images.update(
+                {f"{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
 
         decodeImage(images)
 
@@ -85,22 +91,40 @@ class ProductsResource(Resource):
         return response({"message": "Product added"}, 201)
 
     @parse_params(
-        Argument("title", location="json", required=True, help="Title is required"),
-        Argument("description", location="json", required=True,
-                 dest='product_detail', help="Description is required"),
-        Argument("price", location="json", required=True, help="Price is required"),
-        Argument("condition", location="json", required=True, help="Condition is required"),
-        Argument("category", location="json", required=True,
-                 dest='category_id', help="Category is required"),
-        Argument("images", location="json", required=True, type=list,
-                 dest='product_images', help="Images is required"),
+        Argument("title", location="json", default=None),
+        Argument("description", location="json",
+                 dest='product_detail', default=None),
+        Argument("price", location="json", default=None),
+        Argument("condition", location="json", default=None),
+        Argument("category", location="json",
+                 dest='category_id', default=None),
+        Argument("images", location="json", type=list,
+                 dest='product_images', default=[]),
         Argument("product_id", location="json", required=True,
-                 dest='id', help="Product_id is required"),
+                 dest='id', help="product_id is required"),
     )
-    def put(self, id, title, product_detail, condition, category_id, price, product_images):
+    @admin_required
+    def put(self, id, title, product_detail, condition, category_id, price, product_images, user_id):
+        product = ProductRepository.get_by(id=id).first()
+
+        if product is None:
+            return response({"message": "Product not found"}, 404)
+
         ProductRepository.update(
             id, title=title, price=price, category_id=category_id, condition=condition, product_detail=product_detail)
-        ProductRepository.update_image(*product_images, product_id=id)
+
+        if product_images != []:
+            images = {}
+
+            for i, image in enumerate(product_images, 1):
+                base = image.split(",")[1]
+                type = image.split(",")[0].split("/")[1].split(";")[0]
+                images.update(
+                    {f"{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
+
+            decodeImage(images)
+
+            ProductRepository.update_image(images.keys(), product_id=product.id)
 
         return response({"message": "Product updated"}, 201)
 
@@ -115,6 +139,7 @@ class ProductImageSearchResource(Resource):
         """ Search product image """
 
         return response({"message": "Product image search"}, 201)
+
 
 class ProductResource(Resource):
     """ Product resource """
@@ -137,7 +162,7 @@ class ProductResource(Resource):
 
         return response(res, 200)
 
-    @token_required
+    @admin_required
     def delete(self, id, user_id):
         ProductRepository.delete(id)
         return response({"message": "Product deleted"}, 201)

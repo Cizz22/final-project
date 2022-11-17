@@ -20,7 +20,7 @@ class OrderAddress(db.Model, BaseModel, metaclass=MetaBaseModel):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     deleted_at = db.Column(db.DateTime, nullable=True, server_default=None)
 
-    order = db.relationship('Order', back_populates='order_addresses')
+    order = db.relationship('Order', back_populates='order_address')
 
     def __init__(self, order_id, address, city, name, phone_number):
         """ Create a new User """
