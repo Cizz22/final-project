@@ -84,6 +84,34 @@ class TestSignUp(unittest.TestCase):
         self.app_context.pop()
 
     def test_post(self):
-        pass
+        
+        user_data = {
+            "name": "test",
+            "email": "test@email.com",
+            "phone_number": "081234567890",
+            "password": "password",
+            "type": "buyer"
+        }
 
+        response = self.client.post(
+            "/sign-up",
+            data = json.dumps({
+                "email": user_data["email"],
+                "password": user_data["password"],
+                "name": user_data["name"],
+                "phone_number": user_data["phone_number"],
+                "type": user_data["type"]
+            }),
+            content_type = "application/json"
+        )
 
+        user = UserRepository.get_by_email(user_data["email"])
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            json.loads(response.data.decode("utf-8")),
+            {
+                "message": "Success, user created",
+            }
+        )
+        self.assertEqual(user.email, user_data["email"])
