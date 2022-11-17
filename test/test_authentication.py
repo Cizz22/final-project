@@ -114,4 +114,4 @@ class TestSignUp(unittest.TestCase):
                 "message": "Success, user created",
             }
         )
-        self.assertEqual(user.email, user_data["email"])
+        self.assertEqual(user.name, user_data["name"])
