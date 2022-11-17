@@ -1,7 +1,7 @@
 from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
-from flask_seeder import FlaskSeeder
+# from flask_seeder import FlaskSeeder
 
 from utils import handle_exception, celery_app
 
