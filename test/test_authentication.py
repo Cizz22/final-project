@@ -1,13 +1,9 @@
 import json
 import unittest
-from urllib import response
 
-from models import Category, Banner
 from models.abc import db
 from repositories import UserRepository
 from server import server
-from flask.json import jsonify
-
 
 class TestSignIn(unittest.TestCase):
     @classmethod
