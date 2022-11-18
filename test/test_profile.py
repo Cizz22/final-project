@@ -335,3 +335,73 @@ class TestBalance(unittest.TestCase):
         self.data["balance"] += 10000
 
         self.assert_get()
+
+class TestSales(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        server.config['SERVER_NAME'] = 'localhost:5053'
+        cls.client = server.test_client()
+
+    def setUp(self):
+        self.app_context = server.app_context()
+        self.app_context.push()
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+    def assert_get(self):
+
+        response = self.client.get(
+            "/sales",
+            headers = {
+                "Authentication": self.token
+            }
+        )
+
+        response_json = json.loads(response.data.decode("utf-8"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_json,
+            {
+                "data": self.data
+            }
+        )
+
+    def test_get(self):
+        
+        admin_data = {
+            "name": "test",
+            "email": "test@email.com",
+            "phone_number": "081234567890",
+            "password": "password",
+            "type": "seller"
+        }
+
+        UserRepository.create(admin_data["name"], admin_data["email"], admin_data["phone_number"], admin_data["password"], admin_data["type"])
+        admin = UserRepository.get_by_email(admin_data["email"])
+        
+        self.data = {
+            "total": 0
+        }
+
+        login_admin = self.client.post(
+            "/sign-in",
+            data = json.dumps({
+                "email": admin_data["email"],
+                "password": admin_data["password"]
+            }),
+            content_type = "application/json"
+        )
+
+        self.token = json.loads(login_admin.data.decode("utf-8"))["token"]
+
+        self.assert_get()
+
+        self.data["total"] += 10000
+        UserRepository.update(admin.id, balance=self.data["total"])
+
+        self.assert_get()
