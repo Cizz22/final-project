@@ -272,3 +272,66 @@ class TestBalance(unittest.TestCase):
         )
 
         self.assertEqual(user.balance, 10000)
+
+    def assert_get(self):
+
+        response = self.client.get(
+            "/user/balance",
+            headers = {
+                "Authentication": self.token
+            }
+        )
+
+        response_json = json.loads(response.data.decode("utf-8"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_json,
+            {
+                "data": self.data
+            }
+        )
+
+    def test_get(self):
+        
+        user_data = {
+            "name": "test",
+            "email": "test@email.com",
+            "phone_number": "081234567890",
+            "password": "password",
+            "type": "buyer"
+        }
+
+        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
+        
+        self.data = {
+            "balance": 0
+        }
+
+        login_user = self.client.post(
+            "/sign-in",
+            data = json.dumps({
+                "email": user_data["email"],
+                "password": user_data["password"]
+            }),
+            content_type = "application/json"
+        )
+
+        self.token = json.loads(login_user.data.decode("utf-8"))["token"]
+
+        self.assert_get()
+
+        self.client.post(
+            "/user/balance",
+            headers = {
+                "Authentication": self.token
+            },
+            data = json.dumps({
+                "amount": 10000
+            }),
+            content_type = "application/json"
+        )
+
+        self.data["balance"] += 10000
+
+        self.assert_get()
