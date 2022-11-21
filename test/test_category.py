@@ -133,3 +133,29 @@ class TestCategory(unittest.TestCase):
             }
         )
         self.assertEqual(new_category.title, "Category B")
+
+    def test_delete(self):
+
+        CategoryRepository.create("Category A")
+        category = CategoryRepository.get_by(title="Category A").one_or_none()
+        category_id = str(category.id)
+
+        token = self.get_token()
+
+        response = self.client.delete(
+            f"/categories/{category_id}",
+            headers = {
+                "Authentication": token
+            }
+        )
+
+        response_json = json.loads(response.data.decode("utf-8"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response_json,
+            {
+                "message": "Category deleted"
+            }
+        )
+        self.assertNotEqual(category.deleted_at, None)
