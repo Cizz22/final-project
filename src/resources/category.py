@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask_restful.reqparse import Argument
-from utils import parse_params, response, token_required
+from utils import parse_params, response, admin_required
 from repositories import CategoryRepository, UserRepository
 
 class CategoriesResource(Resource):
@@ -27,7 +27,7 @@ class CategoriesResource(Resource):
     @parse_params(
         Argument("category_name", location="json", required=True, help="Category name is required")
     )
-    @token_required
+    @admin_required
     def post(self, user_id, category_name):
         """ Create Category """
 
@@ -59,7 +59,7 @@ class CategoryResource(Resource):
     @parse_params(
         Argument("category_name", location="json", required=True, help="Category name is required")
     )
-    @token_required
+    @admin_required
     def put(self, id, user_id, category_name):
         """ Update Category """
 
@@ -86,7 +86,7 @@ class CategoryResource(Resource):
 
         return response(res, 200)
 
-    @token_required
+    @admin_required
     def delete(self, id, user_id):
         """" Delete Category """
 
