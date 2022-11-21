@@ -73,3 +73,31 @@ class TestCategory(unittest.TestCase):
                 "data": data
             }
         )
+
+    def test_post(self):
+
+        token = self.get_token()
+
+        response = self.client.post(
+            "/categories",
+            headers = {
+                "Authentication": token
+            },
+            data = json.dumps({
+                "category_name": "Category A"
+            }),
+            content_type = "application/json"
+        )
+
+        response_json = json.loads(response.data.decode("utf-8"))
+
+        category = CategoryRepository.get_by(title="Category A").one_or_none()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response_json,
+            {
+                "message": "Category added"
+            }
+        )
+        self.assertEqual(category.title, "Category A")
