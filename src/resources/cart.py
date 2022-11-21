@@ -16,19 +16,21 @@ class CartsResource(Resource):
         """Get cart"""
         items = CartRepository.get_by(user_id=user_id).all()
 
-        res = [
-            {
-                "id": item.id,
-                "details": {
-                    "quantity": item.quantity,
-                    "size": item.size,
-                },
-                "price": item.price,
-                "image": item.product.product_images[0].image,
-                "name": item.product.title,
+        res = {
+            "data": [
+                {
+                    "id": item.id,
+                    "details": {
+                        "quantity": item.quantity,
+                        "size": item.size,
+                    },
+                    "price": item.price,
+                    "image": item.product.product_images[0].image,
+                    "name": item.product.title,
 
-            } for item in items
-        ]
+                } for item in items
+            ]
+        }
 
         return response(res, 200)
 
