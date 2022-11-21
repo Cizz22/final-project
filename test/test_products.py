@@ -149,3 +149,30 @@ class TestProduct(unittest.TestCase):
                 "images_url": [product_image.json['image'] for product_image in product.product_images],
             }
         )
+
+    def test_delete(self):
+        category = CategoryRepository.create("test2")
+        UserRepository.create("test", "test@gmail.com", "12345678", "12345678", "seller")
+
+        login_users = self.client.post(
+            "/sign-in",
+            data=json.dumps({
+                "email" : "test@gmail.com",
+                "password" : "12345678",
+            }),
+            content_type="application/json"
+        )
+        self.token = json.loads(login_users.data.decode("utf-8"))
+
+        product = ProductRepository.create("test", 10000, category.id, "new", "test")
+        images = ProductRepository.create_image(["test1.jpg", "test2.jpg"], product.id)
+
+        response = self.client.delete(
+            f"/products/{str(product.id)}", headers={"Authentication": self.token["token"]})
+
+        self.assertEqual(
+            json.loads(response.data.decode("utf-8")),
+            {
+                "message": "Product deleted",
+            }
+        )
