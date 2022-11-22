@@ -48,7 +48,7 @@ class ProductsResource(Resource):
         return response(res, 200)
 
     @parse_params(
-        Argument("title", location="json", required=True, help="Title is required"),
+        Argument("product_name", location="json", required=True, help="Product name is required" ,dest="title"),
         Argument("description", location="json", required=True,
                  dest='product_detail', help="Description is required"),
         Argument("price", location="json", required=True, help="Price is required"),
@@ -91,7 +91,7 @@ class ProductsResource(Resource):
         return response({"message": "Product added"}, 201)
 
     @parse_params(
-        Argument("title", location="json", default=None),
+        Argument("product_name", location="json", default=None, dest="title"),
         Argument("description", location="json",
                  dest='product_detail', default=None),
         Argument("price", location="json", default=None),
