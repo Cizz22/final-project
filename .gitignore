@@ -10,3 +10,4 @@ postgres-data/
 static/image/
 env/
 .env
+ssl/

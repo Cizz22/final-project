@@ -78,7 +78,7 @@ services:
       - 443:443
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ~/ssl:/ssl/
+      - ./ssl/:/ssl/
 
 volumes:
   postgres-vol:
