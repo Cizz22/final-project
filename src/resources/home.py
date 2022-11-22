@@ -27,11 +27,12 @@ class HomeCategoryResource(Resource):
     def get(self):
         """ Get all categories """
         categories = CategoryRepository.get_all()
+        products = ProductRepository.get_by()
 
         res = {"data": [{
             "id": category.json['id'],
             "title": category.json['title'],
-            "image": ProductRepository.get_by(category_id=category.json['id']).first().product_images
+            "image": ProductRepository.get_by(category_id=category.json['id'], deleted_at=None).first().product_images[0].json["image"] if ProductRepository.get_by(category_id=category.json['id'], deleted_at=None).first() else None,
         } for category in categories]}
 
         return response(res)
