@@ -13,7 +13,7 @@ class OrdersResource(Resource):
         Argument("shipping_method", location="json", required=True,
                  help="Shipping method is required"),
         Argument("shipping_address", location="json", required=True,
-                 help="Shipping address is required"),
+                 help="Shipping address is required", type=dict),
     )
     @token_required
     def post(self, shipping_method, shipping_address, user_id):
@@ -47,34 +47,35 @@ class OrdersResource(Resource):
         Argument("sort_by", location="args", required=False),
         Argument("page", location="args", required=False, default=1),
         Argument("page_size", location="args", required=False, default=10),
-        Argument("is_admin", location="args", required=False),
     )
     @admin_required
-    def get(self, sort_by, page, page_size, is_admin, user_id):
+    def get(self, sort_by, page, page_size, user_id):
         """Get all orders"""
 
         orders = OrderRepository.get_query(sort_by, page, page_size)
 
-        res = [
-            {
-                "id": order.id,
-                "created_at": order.created_at,
-                "shipping_method": order.shipping_method,
-                "status": order.status,
-                "user_id": order.user_id,
-                "email": order.user.email,
-                "products": [{
-                    "id": item.product.id,
-                    "details": {
-                        "quantity": item.quantity,
-                        "size": item.size,
-                    },
-                    "price": item.price,
-                    "image": [image.image for image in item.product.product_images],
-                    "name":item.product.title,
-                } for item in order.order_items],
-            } for order in orders['data']
-        ]
+        res = {
+            "data": [
+                {
+                    "id": order.id,
+                    "created_at": order.created_at,
+                    "shipping_method": order.shipping_method,
+                    "status": order.status,
+                    "user_id": order.user_id,
+                    "email": order.user.email,
+                    "total": order.total_price,
+                    "products": [{
+                        "id": item.product.id,
+                        "details": {
+                            "quantity": item.quantity,
+                            "size": item.size,
+                        },
+                        "price": item.price,
+                        "image": [image.image for image in item.product.product_images],
+                        "name":item.product.title,
+                    } for item in order.order_items],
+                } for order in orders['data']
+            ]}
 
         return response(res, 200)
 
