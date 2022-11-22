@@ -43,7 +43,7 @@ class ProductRepository:
                 else:
                     res = res.filter_by(**{key: value})
         if sort_by:
-            res = res.order_by(getattr(Product, sort_by[0])) if sort_by[1] == "a_z" else res.order_by(
+            res = res.order_by(getattr(Product, sort_by[0].lower())) if sort_by[1] == "a_z" else res.order_by(
                 desc(getattr(Product, sort_by[0])))
 
         return {"data": res.paginate(page=page, per_page=page_size) , "total" : res.count()}
