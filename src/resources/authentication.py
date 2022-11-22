@@ -57,4 +57,4 @@ class SignupResource(Resource):
             return response({"message": "Error, user already exists"}, 409)
 
         UserRepository.create(name, email, phone_number, password, type)
-        return response({"message": "Success, user created"}, 201)
+        return response({"message": "success, user created"}, 201)
