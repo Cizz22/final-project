@@ -3,6 +3,7 @@ from flask_restful.reqparse import Argument
 from utils import parse_params, response, create_token
 from repositories import UserRepository
 
+
 class SigninResource(Resource):
     """ Signin resource """
 
@@ -10,7 +11,6 @@ class SigninResource(Resource):
         Argument("email", location="json", required=True, help="Email cannot be blank."),
         Argument("password", location="json", required=True, help="Password cannot be blank."),
     )
-
     def post(self, email, password):
         """ Signin """
 
@@ -18,10 +18,10 @@ class SigninResource(Resource):
 
         if user is None:
             return response({"error": "Email is not registered"}, 401)
-        
+
         if not user.check_password(password):
             return response({"error": "Password incorrect"}, 401)
-        
+
         token = create_token(str(user.id))
         user_information = {
             "name" : user.name,
@@ -35,8 +35,6 @@ class SigninResource(Resource):
             "token": token,
             "message": "Login success"
         }, 200)
-    
-
 
 
 class SignupResource(Resource):
@@ -46,10 +44,10 @@ class SignupResource(Resource):
         Argument("email", location="json", required=True, help="Email cannot be blank."),
         Argument("password", location="json", required=True, help="Password cannot be blank."),
         Argument("name", location="json", required=True, help="Name cannot be blank"),
-        Argument("phone_number", location="json", required=True, help="Phone Number cannot be blank"),
-        Argument("type", location="json", required=True, help="Type cannot be blank"),
+        Argument("phone_number", location="json", required=True,
+                 help="Phone Number cannot be blank"),
+        Argument("type", location="json", default="buyer"),
     )
-
     def post(self, email, password, name, phone_number, type):
         """ Signup """
 
