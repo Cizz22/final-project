@@ -3,7 +3,7 @@ from utils import parse_params, response
 from flask_restful.reqparse import Argument
 
 
-from repositories import BannerRepository, CategoryRepository
+from repositories import BannerRepository, CategoryRepository, ProductRepository
 
 
 class HomeBannerResource(Resource):
@@ -27,7 +27,11 @@ class HomeCategoryResource(Resource):
     def get(self):
         """ Get all categories """
         categories = CategoryRepository.get_all()
-        return response({"data": [{
+
+        res = {"data": [{
             "id": category.json['id'],
             "title": category.json['title'],
-        } for category in categories]})
+            "image": ProductRepository.get_by(category_id=category.json['id']).first().product_images
+        } for category in categories]}
+
+        return response(res)
