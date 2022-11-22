@@ -140,13 +140,14 @@ class TestProduct(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             json.loads(response.data.decode("utf-8")),
-            {
+            {"data": {
                 "id": str(product.json['id']),
                 "title": product.json['title'],
-                "size": product.json['size'],
+                "size": ["S", "M", "L"],
                 "product_detail": product.json['product_detail'],
                 "price": product.json['price'],
                 "images_url": [product_image.json['image'] for product_image in product.product_images],
+            }
             }
         )
 

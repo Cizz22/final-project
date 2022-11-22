@@ -59,13 +59,13 @@ class CartsResource(Resource):
 
         CartRepository.create(user_id, product_id, size, quantity, product.price * quantity)
 
-        return response({"message": "Item added to cart"}, 200)
+        return response({"message": "Item added to cart"}, 201)
 
 
 class CartResource(Resource):
     """Cart Resource"""
 
     @token_required
-    def delete(self, id, user_id):
+    def get(self, id, user_id):
         CartRepository.delete(id)
         return response({"message": "Cart deleted"}, 200)

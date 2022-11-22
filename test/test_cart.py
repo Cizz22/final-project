@@ -114,7 +114,7 @@ class TestCart(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_delete(self):
+    def test_get(self):
         category = CategoryRepository.create("test2")
         product = ProductRepository.create("test", 1, category.id, "new", "Product Details")
         ProductRepository.create_image(["test1", "test2"], product.id)
@@ -133,7 +133,7 @@ class TestCart(unittest.TestCase):
 
         cart = CartRepository.create(user.id, product.id, "S", 1, 1000)
 
-        response = self.client.delete(
+        response = self.client.get(
             f"/cart/{str(cart.id)}",
             headers={"Authentication": self.token['token']}
         )

@@ -48,7 +48,8 @@ class ProductsResource(Resource):
         return response(res, 200)
 
     @parse_params(
-        Argument("product_name", location="json", required=True, help="Product name is required" ,dest="title"),
+        Argument("product_name", location="json", required=True,
+                 help="Product name is required" , dest="title"),
         Argument("description", location="json", required=True,
                  dest='product_detail', help="Description is required"),
         Argument("price", location="json", required=True, help="Price is required"),
@@ -154,13 +155,13 @@ class ProductResource(Resource):
         res = {
             "id": product.json['id'],
             "title": product.json['title'],
-            "size": product.json['size'],
+            "size": ["S", "M", "L"],
             "product_detail": product.json['product_detail'],
             "price": product.json['price'],
             "images_url": [product_image.json['image'] for product_image in product.product_images],
         }
 
-        return response(res, 200)
+        return response({"data": res}, 200)
 
     @admin_required
     def delete(self, id, user_id):
