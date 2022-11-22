@@ -37,6 +37,11 @@ celery = celery_app.init_app(server)
 def main():
     return "oke"
 
+@server.route("/drop")
+def drop():
+    db.drop_all()
+    return "oke"
+
 
 @server.errorhandler(Exception)
 def handle_error(e):
