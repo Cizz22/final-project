@@ -2,6 +2,7 @@ from flask import Flask
 from flask.blueprints import Blueprint
 from flask_migrate import Migrate
 # from flask_seeder import FlaskSeeder
+from flask_cors import CORS
 
 from utils import handle_exception, celery_app
 
@@ -31,6 +32,9 @@ migrate = Migrate(server, db)
 
 """Celery Configuration"""
 celery = celery_app.init_app(server)
+
+"""CORS Configuration"""
+CORS(server)
 
 
 @server.route("/")
