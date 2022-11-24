@@ -24,48 +24,6 @@ class TestOrders(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_post(self):
-        category = CategoryRepository.create("test2")
-        product = ProductRepository.create("test", 1, category.id, "new", "Product Details")
-        ProductRepository.create_image(["test1", "test2"], product.id)
-
-        user = UserRepository.create("test", "test@gmail.com", "12345678", "12345678", "buyer")
-        UserRepository.update(user.id, balance=100000)
-
-        login_users = self.client.post(
-            "/sign-in",
-            data=json.dumps({
-                "email" : "test@gmail.com",
-                "password" : "12345678",
-            }),
-            content_type="application/json"
-        )
-        self.token = json.loads(login_users.data.decode("utf-8"))
-
-        cart = CartRepository.create(user.id, product.id, "S", 1, 1000)
-
-        response = self.client.post(
-            "/orders",
-            headers={"Authentication": self.token["token"]},
-            data=json.dumps({
-                "shipping_method" : "regular",
-                "shipping_address": {
-                    "name": "auli",
-                    "phone_number": "12345678",
-                    "address": "Jalan1234",
-                    "city": "malang"
-                }
-            }),
-            content_type="application/json"
-        )
-
-        self.assertEqual(
-            json.loads(response.data.decode("utf-8")),
-            {
-                "message": "Order Created",
-            }
-        )
-
     def test_get(self):
         category = CategoryRepository.create("test2")
         product = ProductRepository.create("test", 1, category.id, "new", "Product Details")
@@ -87,7 +45,7 @@ class TestOrders(unittest.TestCase):
         cart = CartRepository.create(user.id, product.id, "S", 1, 1000)
 
         self.client.post(
-            "/orders",
+            "/order",
             headers={"Authentication": self.token["token"]},
             data=json.dumps({
                 "shipping_method" : "regular",
@@ -174,7 +132,7 @@ class TestOrder(unittest.TestCase):
         cart = CartRepository.create(user.id, product.id, "S", 1, 1000)
 
         self.client.post(
-            "/orders",
+            "/order",
             headers={"Authentication": self.token["token"]},
             data=json.dumps({
                 "shipping_method" : "regular",
@@ -215,5 +173,47 @@ class TestOrder(unittest.TestCase):
                         "name":item.product.title,
                     }]
                 }],
+            }
+        )
+
+    def test_post(self):
+        category = CategoryRepository.create("test2")
+        product = ProductRepository.create("test", 1, category.id, "new", "Product Details")
+        ProductRepository.create_image(["test1", "test2"], product.id)
+
+        user = UserRepository.create("test", "test@gmail.com", "12345678", "12345678", "buyer")
+        UserRepository.update(user.id, balance=100000)
+
+        login_users = self.client.post(
+            "/sign-in",
+            data=json.dumps({
+                "email" : "test@gmail.com",
+                "password" : "12345678",
+            }),
+            content_type="application/json"
+        )
+        self.token = json.loads(login_users.data.decode("utf-8"))
+
+        cart = CartRepository.create(user.id, product.id, "S", 1, 1000)
+
+        response = self.client.post(
+            "/order",
+            headers={"Authentication": self.token["token"]},
+            data=json.dumps({
+                "shipping_method" : "regular",
+                "shipping_address": {
+                    "name": "auli",
+                    "phone_number": "12345678",
+                    "address": "Jalan1234",
+                    "city": "malang"
+                }
+            }),
+            content_type="application/json"
+        )
+
+        self.assertEqual(
+            json.loads(response.data.decode("utf-8")),
+            {
+                "message": "Order Created",
             }
         )
