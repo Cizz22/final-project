@@ -103,7 +103,7 @@ class OrderResource(Resource):
 
         CartRepository.delete_all(user_carts)
 
-        balance = user.balance - total_price + shipping_fee
+        balance = user.balance - total_price - shipping_fee
 
         UserRepository.update(user_id, balance=balance)
 

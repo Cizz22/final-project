@@ -1,6 +1,6 @@
 
 
-def get_shipping_fee(total, shipping_method):
+def get_shipping_fee(total, shipping_method) -> float:
     if shipping_method == "regular":
         if total < 200000:
             return total * 0.15
@@ -11,3 +11,5 @@ def get_shipping_fee(total, shipping_method):
             return total * 0.2
         else:
             return total * 0.25
+
+    return 0
