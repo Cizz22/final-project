@@ -103,4 +103,14 @@ class OrderResource(Resource):
 
         CartRepository.delete_all(user_carts)
 
+        balance = user.balance - total_price + shipping_fee
+
+        UserRepository.update(user_id, balance=balance)
+
+        seller = UserRepository.get_by(type="seller").first()
+
+        sales = seller.balance + total_price
+
+        UserRepository.update(seller.id, balance=sales)
+
         return response({"message": "Order Created"}, 201)

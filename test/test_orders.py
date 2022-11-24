@@ -182,6 +182,7 @@ class TestOrder(unittest.TestCase):
         ProductRepository.create_image(["test1", "test2"], product.id)
 
         user = UserRepository.create("test", "test@gmail.com", "12345678", "12345678", "buyer")
+        UserRepository.create("test2", "test2@gmail.com", "12345678", "12345678", "seller")
         UserRepository.update(user.id, balance=100000)
 
         login_users = self.client.post(
