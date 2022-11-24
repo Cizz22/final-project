@@ -48,7 +48,7 @@ class CartsResource(Resource):
         if cartItem:
             quantity = cartItem.quantity + quantity
             CartRepository.update(cartItem.id, quantity=quantity,
-                                  price=cartItem.product.price * quantity)
+                                  price=cartItem.product.price)
 
             return response({"message": "Item success added to cart"}, 201)
 
@@ -57,7 +57,7 @@ class CartsResource(Resource):
         if not product:
             return response({"message": "Product not found"}, 404)
 
-        CartRepository.create(user_id, product_id, size, quantity, product.price * quantity)
+        CartRepository.create(user_id, product_id, size, quantity, product.price)
 
         return response({"message": "Item success added to cart"}, 201)
 
@@ -66,6 +66,6 @@ class CartResource(Resource):
     """Cart Resource"""
 
     @token_required
-    def get(self, id, user_id):
+    def delete(self, id, user_id):
         CartRepository.delete(id)
         return response({"message": "Cart deleted"}, 200)
