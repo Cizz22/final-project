@@ -27,7 +27,8 @@ class OrdersResource(Resource):
                     "shipping_method": order.shipping_method,
                     "status": order.status,
                     "user_id": order.user_id,
-                    "email": order.user.email,
+                    "user_email": order.user.email,
+                    "user_name": order.user.name,
                     "total": order.total_price,
                     "products": [{
                         "id": item.product.id,
