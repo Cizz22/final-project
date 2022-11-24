@@ -50,7 +50,7 @@ class CartsResource(Resource):
             CartRepository.update(cartItem.id, quantity=quantity,
                                   price=cartItem.product.price * quantity)
 
-            return response({"message": "Item added to cart"}, 200)
+            return response({"message": "Item success added to cart"}, 201)
 
         product = ProductRepository.get_by(id=product_id).one_or_none()
 
@@ -59,7 +59,7 @@ class CartsResource(Resource):
 
         CartRepository.create(user_id, product_id, size, quantity, product.price * quantity)
 
-        return response({"message": "Item added to cart"}, 201)
+        return response({"message": "Item success added to cart"}, 201)
 
 
 class CartResource(Resource):

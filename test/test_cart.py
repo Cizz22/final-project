@@ -92,7 +92,7 @@ class TestCarts(unittest.TestCase):
         self.assertEqual(
             json.loads(response.data.decode("utf-8")),
             {
-                "message": "Item added to cart",
+                "message": "Item success added to cart",
             }
         )
         self.assertEqual(CartRepository.get_by().count(), 1)
