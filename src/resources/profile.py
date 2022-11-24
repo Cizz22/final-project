@@ -54,7 +54,8 @@ class ShippingAddressResource(Resource):
         }
 
         res = {
-            "data": data
+            "data": data,
+            "message":"Update shipping address success"
         }
 
         return response(res, 200)
