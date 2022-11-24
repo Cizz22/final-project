@@ -107,7 +107,7 @@ class TestSignUp(unittest.TestCase):
         self.assertEqual(
             json.loads(response.data.decode("utf-8")),
             {
-                "message": "Success, user created",
+                "message": "success, user created",
             }
         )
         self.assertEqual(user.name, user_data["name"])

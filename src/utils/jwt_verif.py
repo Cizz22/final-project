@@ -50,4 +50,4 @@ def admin_required(f):
 
 
 def create_token(user_id):
-    return jwt.encode({'user_id': user_id, 'exp' : datetime.utcnow() + timedelta(minutes=60)}, current_app.config['SECRET_KEY'])
+    return jwt.encode({'user_id': user_id}, current_app.config['SECRET_KEY'])

@@ -60,7 +60,7 @@ class TestProducts(unittest.TestCase):
             "/products",
             headers={"Authentication": self.token['token']},
             data=json.dumps({
-                "title": "test",
+                "product_name": "test",
                 "description": "Product Details",
                 "price": 1,
                 "condition": "new",
@@ -69,7 +69,6 @@ class TestProducts(unittest.TestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 201)
         self.assertEqual(
             json.loads(response.data.decode("utf-8")),
             {
