@@ -94,7 +94,7 @@ class OrderResource(Resource):
 
         total_price = 0
         for cart in user_carts:
-            total_price += cart.price
+            total_price += cart.price * cart.quantity
 
         user = UserRepository.get_by_id(user_id)
         if user.balance < total_price:

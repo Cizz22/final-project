@@ -21,7 +21,7 @@ class ShippingPriceResource(Resource):
 
         total_price = 0
         for cart in carts:
-            total_price += cart.price
+            total_price += cart.price * cart.quantity
 
         res = [{
             "name": "regular",
