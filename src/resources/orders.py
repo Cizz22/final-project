@@ -56,6 +56,12 @@ class OrderResource(Resource):
                 "created_at": order.created_at,
                 "shipping_method": order.shipping_method,
                 "status": order.status,
+                "shipping_address": {
+                    "name": order.order_address[0].name,
+                    "address": order.order_address[0].address,
+                    "phone_number": order.order_address[0].phone_number,
+                    "city": order.order_address[0].city,
+                },
                 "products": [{
                     "id": item.product.id,
                     "details": {
