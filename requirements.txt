@@ -13,3 +13,4 @@ PyJWT
 celery
 Redis
 flask-cors
+Flask-Seeder

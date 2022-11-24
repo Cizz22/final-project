@@ -15,4 +15,7 @@ database.downgrade: ## Downgrade latest migration
 	docker-compose run --rm server python -m flask db downgrade
 
 database.seeder: ## Run database seeder
-	docker-compose run --rm server python -m flask seed run
+	docker-compose run --rm server python -m flask seeder 
+
+database.drop: ## Drop database
+	docker-compose run --rm server python -m flask drop

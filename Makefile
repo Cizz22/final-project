@@ -4,9 +4,9 @@
 ### QUICK
 # ¯¯¯¯¯¯¯
 
-install: server.install worker.install ## Install
+install: server.install ## Install
 
-daemon: worker.daemon server.daemon## Start daemon
+daemon: server.daemon## Start daemon
 
 stop: server.stop
 
