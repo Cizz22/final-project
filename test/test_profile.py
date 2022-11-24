@@ -5,6 +5,7 @@ from models.abc import db
 from repositories import UserRepository
 from server import server
 
+
 class TestUser(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -20,7 +21,7 @@ class TestUser(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
-    
+
     def test_get(self):
 
         user_data = {
@@ -36,23 +37,24 @@ class TestUser(unittest.TestCase):
             "email": user_data["email"],
             "phone_number": user_data["phone_number"]
         }
-        
-        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
+
+        UserRepository.create(user_data["name"], user_data["email"],
+                              user_data["phone_number"], user_data["password"], user_data["type"])
 
         login_user = self.client.post(
             "/sign-in",
-            data = json.dumps({
+            data=json.dumps({
                 "email": user_data["email"],
                 "password": user_data["password"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.token = json.loads(login_user.data.decode("utf-8"))["token"]
 
         response = self.client.get(
             "/user",
-            headers = {
+            headers={
                 "Authentication": self.token
             }
         )
@@ -66,6 +68,7 @@ class TestUser(unittest.TestCase):
                 "data": data
             }
         )
+
 
 class TestShippingAddress(unittest.TestCase):
     @classmethod
@@ -100,31 +103,32 @@ class TestShippingAddress(unittest.TestCase):
             "city": "Birnin Zana"
         }
 
-        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
+        UserRepository.create(user_data["name"], user_data["email"],
+                              user_data["phone_number"], user_data["password"], user_data["type"])
 
         login_user = self.client.post(
             "/sign-in",
-            data = json.dumps({
+            data=json.dumps({
                 "email": user_data["email"],
                 "password": user_data["password"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.token = json.loads(login_user.data.decode("utf-8"))["token"]
 
         response = self.client.post(
             "/user/shipping_address",
-            headers = {
+            headers={
                 "Authentication": self.token
             },
-            data = json.dumps({
+            data=json.dumps({
                 "name": address_data["name"],
                 "phone_number": address_data["phone_number"],
                 "address": address_data["address"],
                 "city": address_data["city"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         response_json = json.loads(response.data.decode("utf-8"))
@@ -133,7 +137,8 @@ class TestShippingAddress(unittest.TestCase):
         self.assertEqual(
             response_json,
             {
-                "data": address_data
+                "data": address_data,
+                'message': 'Update shipping address success'
             }
         )
 
@@ -154,15 +159,16 @@ class TestShippingAddress(unittest.TestCase):
             "city": "Birnin Zana"
         }
 
-        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
+        UserRepository.create(user_data["name"], user_data["email"],
+                              user_data["phone_number"], user_data["password"], user_data["type"])
 
         login_user = self.client.post(
             "/sign-in",
-            data = json.dumps({
+            data=json.dumps({
                 "email": user_data["email"],
                 "password": user_data["password"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.token = json.loads(login_user.data.decode("utf-8"))["token"]
@@ -171,7 +177,7 @@ class TestShippingAddress(unittest.TestCase):
 
         data = {
             "id": str(user_id),
-            "name":address_data["name"],
+            "name": address_data["name"],
             "phone_number": address_data["phone_number"],
             "address": address_data["address"],
             "city": address_data["city"]
@@ -179,21 +185,21 @@ class TestShippingAddress(unittest.TestCase):
 
         self.client.post(
             "/user/shipping_address",
-            headers = {
+            headers={
                 "Authentication": self.token
             },
-            data = json.dumps({
+            data=json.dumps({
                 "name": address_data["name"],
                 "phone_number": address_data["phone_number"],
                 "address": address_data["address"],
                 "city": address_data["city"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         response = self.client.get(
             "/user/shipping_address",
-            headers = {
+            headers={
                 "Authentication": self.token
             }
         )
@@ -207,6 +213,7 @@ class TestShippingAddress(unittest.TestCase):
                 "data": data
             }
         )
+
 
 class TestBalance(unittest.TestCase):
     @classmethod
@@ -225,7 +232,7 @@ class TestBalance(unittest.TestCase):
         self.app_context.pop()
 
     def test_post(self):
-        
+
         user_data = {
             "name": "test",
             "email": "test@email.com",
@@ -234,31 +241,32 @@ class TestBalance(unittest.TestCase):
             "type": "buyer"
         }
 
-        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
+        UserRepository.create(user_data["name"], user_data["email"],
+                              user_data["phone_number"], user_data["password"], user_data["type"])
         user = UserRepository.get_by_email(user_data["email"])
 
         self.assertEqual(user.balance, 0)
 
         login_user = self.client.post(
             "/sign-in",
-            data = json.dumps({
+            data=json.dumps({
                 "email": user_data["email"],
                 "password": user_data["password"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.token = json.loads(login_user.data.decode("utf-8"))["token"]
 
         response = self.client.post(
             "/user/balance",
-            headers = {
+            headers={
                 "Authentication": self.token
             },
-            data = json.dumps({
+            data=json.dumps({
                 "amount": 10000
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         response_json = json.loads(response.data.decode("utf-8"))
@@ -277,7 +285,7 @@ class TestBalance(unittest.TestCase):
 
         response = self.client.get(
             "/user/balance",
-            headers = {
+            headers={
                 "Authentication": self.token
             }
         )
@@ -293,7 +301,7 @@ class TestBalance(unittest.TestCase):
         )
 
     def test_get(self):
-        
+
         user_data = {
             "name": "test",
             "email": "test@email.com",
@@ -302,19 +310,20 @@ class TestBalance(unittest.TestCase):
             "type": "buyer"
         }
 
-        UserRepository.create(user_data["name"], user_data["email"], user_data["phone_number"], user_data["password"], user_data["type"])
-        
+        UserRepository.create(user_data["name"], user_data["email"],
+                              user_data["phone_number"], user_data["password"], user_data["type"])
+
         self.data = {
             "balance": 0
         }
 
         login_user = self.client.post(
             "/sign-in",
-            data = json.dumps({
+            data=json.dumps({
                 "email": user_data["email"],
                 "password": user_data["password"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.token = json.loads(login_user.data.decode("utf-8"))["token"]
@@ -323,18 +332,19 @@ class TestBalance(unittest.TestCase):
 
         self.client.post(
             "/user/balance",
-            headers = {
+            headers={
                 "Authentication": self.token
             },
-            data = json.dumps({
+            data=json.dumps({
                 "amount": 10000
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.data["balance"] += 10000
 
         self.assert_get()
+
 
 class TestSales(unittest.TestCase):
     @classmethod
@@ -356,7 +366,7 @@ class TestSales(unittest.TestCase):
 
         response = self.client.get(
             "/sales",
-            headers = {
+            headers={
                 "Authentication": self.token
             }
         )
@@ -372,7 +382,7 @@ class TestSales(unittest.TestCase):
         )
 
     def test_get(self):
-        
+
         admin_data = {
             "name": "test",
             "email": "test@email.com",
@@ -381,20 +391,21 @@ class TestSales(unittest.TestCase):
             "type": "seller"
         }
 
-        UserRepository.create(admin_data["name"], admin_data["email"], admin_data["phone_number"], admin_data["password"], admin_data["type"])
+        UserRepository.create(admin_data["name"], admin_data["email"],
+                              admin_data["phone_number"], admin_data["password"], admin_data["type"])
         admin = UserRepository.get_by_email(admin_data["email"])
-        
+
         self.data = {
             "total": 0
         }
 
         login_admin = self.client.post(
             "/sign-in",
-            data = json.dumps({
+            data=json.dumps({
                 "email": admin_data["email"],
                 "password": admin_data["password"]
             }),
-            content_type = "application/json"
+            content_type="application/json"
         )
 
         self.token = json.loads(login_admin.data.decode("utf-8"))["token"]

@@ -76,7 +76,8 @@ class TestOrders(unittest.TestCase):
                     "shipping_method": order.shipping_method,
                     "status": order.status,
                     "user_id": str(order.user_id),
-                    "email": order.user.email,
+                    "user_email": order.user.email,
+                    "user_name": order.user.name,
                     "total": order.total_price,
                     "products": [{
                         "id": str(item.product.id),
@@ -162,6 +163,12 @@ class TestOrder(unittest.TestCase):
                     "created_at": f"{order.created_at:%a, %d %b %Y %H:%M:%S} GMT",
                     "shipping_method": order.shipping_method,
                     "status": order.status,
+                    "shipping_address": {
+                        "name": "auli",
+                        "phone_number": "12345678",
+                        "address": "Jalan1234",
+                        "city": "malang"
+                    },
                     "products": [{
                         "id": str(item.product.id),
                         "details": {

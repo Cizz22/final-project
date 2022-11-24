@@ -74,7 +74,7 @@ class CategoryResource(Resource):
 
         if category is not None:
             return response({
-                "error": "Category is already exists"
+                "error": "Category name is already exists"
             }, 400)
 
         

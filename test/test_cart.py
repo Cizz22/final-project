@@ -133,7 +133,7 @@ class TestCart(unittest.TestCase):
 
         cart = CartRepository.create(user.id, product.id, "S", 1, 1000)
 
-        response = self.client.get(
+        response = self.client.delete(
             f"/cart/{str(cart.id)}",
             headers={"Authentication": self.token['token']}
         )
