@@ -22,6 +22,6 @@ def userSeeder():
             type=user.type,
         )
 
-    UserRepository.create("admin", "admin@admin", "08123456789", "password", "seller")
+    UserRepository.create("admin", "admin@admin.com", "08123456789", "password", "seller")
 
 
