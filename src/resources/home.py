@@ -17,6 +17,7 @@ class HomeBannerResource(Resource):
             {"data": [{
                 "id": banner.json['id'],
                 "title": banner.json['title'],
+                "image": banner.json['image'],
             } for banner in banners]
             })
 

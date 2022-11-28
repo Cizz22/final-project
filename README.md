@@ -3,16 +3,18 @@
 This is repository for the final project of the course Startup Campus.
 
 The primary goal of this project is to make backend for marketplace website. The website will be used to sell and buy products. The website will have a lot of features, but the main ones are:
-- User registration and login
-- User profile
-- Product listing
-- Product search
-- Product details
+
+- Authentication
+- Home
+- Products
 - Cart
-- Order
-- Admin
+- Orders
+- Profile
 
 This project comes with a requirement [document requirement](https://docs.google.com/presentation/d/1QVN_PCq70nv57SHhC5Ngntc5V9AzErCrw8ECCKaMRqM/edit#slide=id.g162a37db668_0_555).
+
+Check documentation for more details. [Documentation](https://documenter.getpostman.com/view/24536254/2s8YmUJydL)
+
 
 ## Table of Contents
 
@@ -46,6 +48,17 @@ $ make daemon        # Run the container containing your local python server
 
 If everything works, you should see the available routes [here](http://127.0.0.1:3000).
 
+in this project you will need storage for images, so you need to create a folder using command
+
+```bash
+$ make server.storage
+```
+
+after that, you can migrate the database
+```bash
+$ make database.upgrade
+```
+
 ## Commands
 
 You can display availables make commands using `make`.
@@ -58,13 +71,19 @@ While developing, you will probably rely mostly on `make server.start`; however,
 | `server.install`     | Install the pip dependencies on the server's container.                      |
 | `server.start`       | Run your local server in its own docker container.                           |
 | `server.daemon`      | Run your local server in its own docker container as a daemon.               |
-| `server.upgrade`     | Upgrade pip packages interactively.                                          |
+| `server.bash`        | Connect to server to lauch commands                                          |
+| `server.stop`        | Stop server in its docker container                                          |
+| `server.logs`        | Display server logs                                                          |
+| `server.storage`     | Make storage file                                                            |
+| `server.nginx`       | Run nginx container with its nginx conf file                                 |
 | `database.connect`   | Connect to your docker database.                                             |
 | `database.migrate`   | Generate a database migration file using alembic, based on your model files. |
 | `database.upgrade`   | Run the migrations until your database is up to date.                        |
 | `database.downgrade` | Downgrade your database by one migration.                                    |
+| `database.seeder`    | Run database seeder                                                          |
+| `database.drop`      | Drop all table                                                               |
 | `test`               | Run unit tests with pytest in its own container.                             |
-| `test.coverage`      | Run test coverage using pytest-cov.                                          |
+
 
 
 ## Database
@@ -96,6 +115,9 @@ The application structure presented in this boilerplate is grouped primarily by 
 │   ├── routes               # Routes definitions and links to their associated resources
 │   │   ├── __init__.py      # Contains every blueprint of your API
 │   │   └── user.py          # The blueprint related to the user
+│   ├── seeder               # Database seeder
+│   │   ├── __init__.py      # Contains main seeder
+│   │   └── user.py          # User seeder
 │   ├── util                 # Some helpfull, non-business Python functions for your project
 │   │   └── parse_params.py  # Wrapper for the resources to easily handle parameters
 │   ├── config.py            # Project configuration settings
