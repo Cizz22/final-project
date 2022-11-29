@@ -62,7 +62,7 @@ class ProductRepository:
         [image.delete() for image in ProductImage.query.filter_by(product_id=product_id).all()]
 
         for image_url in images_url:
-            url = "image/" + image_url
+            url = image_url
             product_image = ProductImage(image=url, product_id=product_id)
             product_image.save()
 

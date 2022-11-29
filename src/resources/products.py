@@ -114,17 +114,24 @@ class ProductsResource(Resource):
         ProductRepository.update(
             id, title=title, price=price, category_id=category_id, condition=condition, product_detail=product_detail)
 
-        images = {}
+        images_base = {}
+        images_url = []
 
+        
         for i, image in enumerate(product_images, 1):
+            if image.startswith("data:image"):
                 base = image.split(",")[1]
                 type = image.split(",")[0].split("/")[1].split(";")[0]
-                images.update(
-                    {f"{title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
+                images_base.update(
+                    {f"image/{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
+            else:
+                images_url.append(image)
+                
+        decodeImage(images_base)
+        
+        images_url.extend(images_base.keys())
 
-        decodeImage(images)
-
-        ProductRepository.update_image(images.keys(), product_id=product.id)
+        ProductRepository.update_image(images_url, product_id=product.id)
 
         return response({"message": "Product updated"}, 201)
 
