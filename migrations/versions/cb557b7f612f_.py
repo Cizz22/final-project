@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e4585390a341
+Revision ID: cb557b7f612f
 Revises: 
-Create Date: 2022-10-22 09:34:12.668515
+Create Date: 2022-11-30 14:18:26.956783
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'e4585390a341'
+revision = 'cb557b7f612f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,13 +26,21 @@ def upgrade():
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('brands',
+    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('title', sa.String(length=300), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('title')
+    )
     op.create_table('categories',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('title', sa.String(length=300), nullable=False),
-    sa.Column('image', sa.String(length=300), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('title')
     )
     op.create_table('users',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
@@ -40,7 +48,11 @@ def upgrade():
     sa.Column('email', sa.String(length=300), nullable=False),
     sa.Column('password', sa.String(length=300), nullable=False),
     sa.Column('phone_number', sa.String(length=300), nullable=True),
+    sa.Column('address_name', sa.String(length=300), nullable=True),
+    sa.Column('address', sa.String(length=300), nullable=True),
+    sa.Column('city', sa.String(length=300), nullable=True),
     sa.Column('type', sa.String(length=300), nullable=False),
+    sa.Column('balance', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
@@ -62,28 +74,19 @@ def upgrade():
     op.create_table('products',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('title', sa.String(length=300), nullable=False),
-    sa.Column('size', sa.String(length=300), server_default='[S,M,L,XL]', nullable=False),
+    sa.Column('size', sa.String(length=300), server_default='["S","M","L"]', nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
     sa.Column('category_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('product_detail', sa.Text(), nullable=False),
     sa.Column('condition', sa.String(length=300), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.Column('brand_id', postgresql.UUID(as_uuid=True), nullable=True),
+    sa.ForeignKeyConstraint(['brand_id'], ['brands.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('title')
-    )
-    op.create_table('user_addresses',
-    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
-    sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=False),
-    sa.Column('name', sa.String(length=300), nullable=False),
-    sa.Column('phone_number', sa.String(length=300), nullable=True),
-    sa.Column('address', sa.String(length=300), nullable=False),
-    sa.Column('city', sa.String(length=300), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.UniqueConstraint('title'),
+    sa.UniqueConstraint('title', 'category_id', 'condition')
     )
     op.create_table('carts',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
@@ -96,6 +99,18 @@ def upgrade():
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('order_addresses',
+    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('order_id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('name', sa.String(length=300), nullable=False),
+    sa.Column('phone_number', sa.String(length=300), nullable=True),
+    sa.Column('address', sa.String(length=300), nullable=False),
+    sa.Column('city', sa.String(length=300), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
+    sa.Column('deleted_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('order_items',
@@ -115,8 +130,6 @@ def upgrade():
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('product_id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('image', sa.String(length=300), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -127,11 +140,12 @@ def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('product_images')
     op.drop_table('order_items')
+    op.drop_table('order_addresses')
     op.drop_table('carts')
-    op.drop_table('user_addresses')
     op.drop_table('products')
     op.drop_table('orders')
     op.drop_table('users')
     op.drop_table('categories')
+    op.drop_table('brands')
     op.drop_table('banners')
     # ### end Alembic commands ###
