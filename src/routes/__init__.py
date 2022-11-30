@@ -7,3 +7,4 @@ from .orders import ORDERS_BLUEPRINT
 from .profile import PROFILE_BLUEPRINT
 from .category import CATEGORY_BLUEPRINT
 from .shipping_price import SHIPPING_BLUEPRINT
+from .brand import BRAND_BLUEPRINT

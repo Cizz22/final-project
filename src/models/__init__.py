@@ -11,3 +11,4 @@ from .order import Order
 from .banner import Banner
 from .order_items import OrderItem
 from .order_addresses import OrderAddress
+from .brand import Brand
