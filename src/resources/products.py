@@ -1,13 +1,13 @@
 from utils import response
 from flask_restful import Resource
-from utils import parse_params
+from utils import parse_params, search_img
 from flask_restful.reqparse import Argument
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 
 
-from repositories import ProductRepository
+from repositories import ProductRepository, CategoryRepository
 from utils import token_required, decodeImage, admin_required
 
 
@@ -142,10 +142,14 @@ class ProductImageSearchResource(Resource):
     @parse_params(
         Argument("image", location="json")
     )
-    def post(self, image):
+    def get(self, image):
         """ Search product image """
 
-        return response({"message": "Product image search"}, 201)
+        base = image.split(",")[1]
+        title_result = search_img(base)
+        category = CategoryRepository.get_by(title=title_result).one_or_none()
+
+        return response({"category_id": category.id}, 200)
 
 
 class ProductResource(Resource):
