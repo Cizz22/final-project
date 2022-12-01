@@ -5,7 +5,7 @@ from flask_cors import CORS
 import click
 from flask.cli import with_appcontext
 
-from utils import handle_exception, celery_app
+from utils import handle_exception, celery_app, response
 
 import config
 import routes
@@ -51,7 +51,17 @@ server.cli.add_command(mainSeeder)
 
 @server.route("/")
 def main():
-    return "oke"
+    is_db_ok = "It's Working"
+    try:
+        db.session.execute("SELECT 1").all()
+    except Exception:
+        is_db_ok = "Something wrong with database"
+        
+    return response({
+        "message": "Welcome to the Fasion Campus API",
+        "documentation": "https://intip.in/urbanAPI",
+        "database": is_db_ok,
+    }, 200)
 
 @server.errorhandler(Exception)
 def handle_error(e):
