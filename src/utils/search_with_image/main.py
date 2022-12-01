@@ -21,7 +21,7 @@ def ai_pipeline(model_inf, img_path, image_path):
 
     image_tensor  = upnoscale(img_path = img, image_path=image_path)
 
-    image_tensor.resize_(1, 3, 256, 256)
+    image_tensor.resize_(1, 3, 224, 224)
 
     output_numpy = get_result(image= image_tensor, model_inf=model_inf)
 

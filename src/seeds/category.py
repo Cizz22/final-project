@@ -1,7 +1,7 @@
 from repositories import CategoryRepository
 
 def categorySeeder():
-    category = ["T-shirt/top",
+    category = ["T-shirt",
                 "Trouser",
                 "Pullover",
                 "Dress",
@@ -10,7 +10,8 @@ def categorySeeder():
                 "Shirt",
                 "Sneaker",
                 "Bag",
-                "Ankle boot"]
+                "Ankle boot",
+                "Hat"]
 
     for c in category:
         CategoryRepository.create(c)
