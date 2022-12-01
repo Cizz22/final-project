@@ -83,7 +83,7 @@ class ProductsResource(Resource):
             base = image.split(",")[1]
             type = image.split(",")[0].split("/")[1].split(";")[0]
             images.update(
-                {f"{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
+                {f"image/{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
 
         decodeImage(images)
 
