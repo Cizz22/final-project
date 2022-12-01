@@ -142,7 +142,7 @@ class ProductImageSearchResource(Resource):
     @parse_params(
         Argument("image", location="json")
     )
-    def get(self, image):
+    def post(self, image):
         """ Search product image """
 
         base = image.split(",")[1]
