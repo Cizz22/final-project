@@ -7,16 +7,25 @@ device = torch.device('cpu')
 def upnoscale(img_path, image_path):
        
     if img_path.any() != None:
-        if(len(img_path)>=256):
+        if(len(img_path)>=224):
+            print('This image is big downscaling')
             img = Image.fromarray(img_path)
             image_tensor = preprocessing_std(img)
 
-        elif len(img_path)<224:
+        elif len(img_path)>28 & len(img_path) < 150 :
+            print('I think this image not big enough, upscaling')
             # model = RealESRGAN(device, scale=4)
             # model.load_weights('weight/RealESRGAN_x4plus.pth')
             img = Image.open(image_path).convert('RGB')
-            sr_mod = init_supres.predict(img_path)
+            sr_mod = init_supres().predict(img_path)
             image_tensor = preprocessing_std(img_path=sr_mod)
+
+        elif len(img_path)<=50:
+            print('Image is small, let upscale 2 times')
+            img = Image.open(image_path).convert('RGB')
+            sr_mod = init_supres().predict(img_path)
+            sr_mod2 = init_supres().predict(img_path)
+            image_tensor = preprocessing_std(img_path=sr_mod2)
 
     else:
         print("cannot find image")
