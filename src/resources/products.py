@@ -16,7 +16,7 @@ class ProductsResource(Resource):
 
     @parse_params(
         Argument("page", location="args", type=int, required=False, default=1),
-        Argument("page_size", location="args", type=int, required=False, default=10),
+        Argument("page_size", location="args", type=int, required=False, default=500),
         Argument("sort_by", location="args", type=str, required=False, default="created_at z_a"),
         Argument("price", location="args", type=str, required=False, default=None),
         Argument("category", location="args", type=str,
