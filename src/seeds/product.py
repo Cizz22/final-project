@@ -13,8 +13,8 @@ def productSeeder():
                 "Bag",
                 "Ankle boot"]
 
-    for c in category, 1:
-        category = CategoryRepository.get_by(category_name=c).first()
+    for c in category:
+        category = CategoryRepository.get_by(title=c).first()
         for i in range(5):
             product = ProductRepository.create(title=f"{c}_{i}" , price=10000 , category_id=category.id,
                                                condition="New", product_detail=f"This is {c} detail")
