@@ -40,7 +40,7 @@ class ProductsResource(Resource):
                 "id": product.json['id'],
                 "title": product.json['title'],
                 "price": product.json['price'],
-                "image": [image.json['image'] for image in product.product_images],
+                "image": product.product_images[0].json['image'],
             } for product in products['data']],
             "total_rows": products['total']
         }

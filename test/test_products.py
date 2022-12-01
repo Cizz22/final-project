@@ -37,7 +37,7 @@ class TestProducts(unittest.TestCase):
                     "id": str(product.json['id']),
                     "title":"test",
                     "price": 1,
-                    "image": ["image/test1", "image/test2"],
+                    "image": "image/test1",
                 }],
                 "total_rows": 1,
             }
