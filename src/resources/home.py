@@ -27,7 +27,7 @@ class HomeCategoryResource(Resource):
 
     def get(self):
         """ Get all categories """
-        categories = CategoryRepository.get_all()
+        categories = CategoryRepository.get_by().paginate(1, 10, False)
         products = ProductRepository.get_by()
 
         res = {"data": [{
