@@ -2,7 +2,7 @@ from repositories import CategoryRepository, ProductRepository
 
 
 def productSeeder():
-    category = ["T-shirt/top",
+    category = ["T-shirt",
                 "Trouser",
                 "Pullover",
                 "Dress",
@@ -11,7 +11,8 @@ def productSeeder():
                 "Shirt",
                 "Sneaker",
                 "Bag",
-                "Ankle boot"]
+                "Ankle boot",
+                "Hat"]
 
     for c in category:
         category = CategoryRepository.get_by(title=c).first()
