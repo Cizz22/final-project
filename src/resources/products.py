@@ -149,7 +149,7 @@ class ProductImageSearchResource(Resource):
         title_result = search_img(base)
         category = CategoryRepository.get_by(title=title_result).one_or_none()
 
-        return response({"category_id": category.id}, 200)
+        return response({"category_id": category.id, "name": category.title}, 200)
 
 
 class ProductResource(Resource):
