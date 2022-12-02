@@ -16,7 +16,7 @@ class ProductsResource(Resource):
 
     @parse_params(
         Argument("page", location="args", type=int, required=False, default=1),
-        Argument("page_size", location="args", type=int, required=False, default=10),
+        Argument("page_size", location="args", type=int, required=False, default=500),
         Argument("sort_by", location="args", type=str, required=False, default="created_at z_a"),
         Argument("price", location="args", type=str, required=False, default=None),
         Argument("category", location="args", type=str,
@@ -83,7 +83,7 @@ class ProductsResource(Resource):
             base = image.split(",")[1]
             type = image.split(",")[0].split("/")[1].split(";")[0]
             images.update(
-                {f"{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
+                {f"image/{product.title}_{product.id}_{i}_{int(datetime.now().timestamp())}.{type}": base})
 
         decodeImage(images)
 
@@ -145,7 +145,7 @@ class ProductImageSearchResource(Resource):
     def post(self, image):
         """ Search product image """
 
-        base = image.split(",")[1]
+        base = image
         title_result = search_img(base)
         category = CategoryRepository.get_by(title=title_result).one_or_none()
 

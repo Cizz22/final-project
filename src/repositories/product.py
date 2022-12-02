@@ -39,7 +39,7 @@ class ProductRepository:
                 elif key == "categories":
                     res = res.filter(Product.category_id.in_(value))
                 elif key == "title" :
-                    res = res.filter(Product.title.like(f"%{value}%"))
+                    res = res.filter(Product.title.ilike(f"%{value}%"))
                 else:
                     res = res.filter_by(**{key: value})
         if sort_by:
