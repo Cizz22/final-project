@@ -29,11 +29,10 @@ class TestBanner(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             json.loads(response.data.decode("utf-8")),
-            {"data" : [{"id": str(banner.json['id']), "title":"test"}, ]}
+            {"data" : [{"id": str(banner.json['id']), "image": "test", "title":"test"}, ]}
         )
-
-
 class TestCategory(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         server.config['SERVER_NAME'] = 'localhost:5053'
@@ -50,12 +49,29 @@ class TestCategory(unittest.TestCase):
         self.app_context.pop()
 
     def test_get(self):
-        category = CategoryRepository.create("test")
 
-        response = self.client.get("/home/category")
+        CategoryRepository.create("Category A")
+        CategoryRepository.create("Category B")
+
+        categories = CategoryRepository.get_all()
+
+        data = [
+            {
+                "id": str(category.id),
+                "title": category.title
+            } for category in categories
+        ]
+
+        response = self.client.get(
+            "/categories"
+        )
+
         response_json = json.loads(response.data.decode("utf-8"))
+
         self.assertEqual(response.status_code, 200)
-        # self.assertEqual(
-        #     response_json,
-        #     {"data": [{"id": str(category.json['id']), "title":"test"}]}
-        # )
+        self.assertEqual(
+            response_json,
+            {
+                "data": data
+            }
+        )
