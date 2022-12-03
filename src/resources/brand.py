@@ -79,7 +79,7 @@ class BrandResource(Resource):
         BrandRepository.delete(id)
 
         res = {
-            "message": "Category deleted"
+            "message": "Brand deleted"
         }
 
         return response(res, 200)
