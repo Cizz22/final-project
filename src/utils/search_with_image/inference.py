@@ -12,13 +12,13 @@ def upnoscale(img_path, image_path):
             img = Image.fromarray(img_path)
             image_tensor = preprocessing_std(img)
 
-        elif len(img_path)>28 & len(img_path) < 150 :
+        elif len(img_path)>28 & len(img_path) < 224 :
             print('I think this image not big enough, upscaling')
             img = Image.open(image_path).convert('RGB')
             sr_mod = init_supres().predict(img)
             image_tensor = preprocessing_std(sr_mod)
 
-        elif len(img_path)<=50:
+        elif len(img_path)<=28:
             print('Image is small, let upscale 2 times')
             img = Image.open(image_path).convert('RGB')
             sr_mod = init_supres().predict(img)
