@@ -6,3 +6,4 @@ from .cart import CartRepository
 from .order import OrderRepository
 from .order_address import OrderAddressRepository
 from .brand import BrandRepository
+from .announcement import AnnouncementRepository
