@@ -145,7 +145,7 @@ class ProductImageSearchResource(Resource):
     def post(self, image):
         """ Search product image """
 
-        base = image.split(",")[1]
+        base = image
         title_result = search_img(base)
         category = CategoryRepository.get_by(title=title_result).one_or_none()
 
