@@ -5,6 +5,7 @@ from .category import categorySeeder
 from .banner import bannerSeeder
 from .brand import brandSeeder
 from .product import productSeeder
+from .announcement import announcementSeeder
 from models import db
 
 @click.command(name='seeder')
@@ -18,3 +19,4 @@ def mainSeeder():
     bannerSeeder() 
     brandSeeder()
     productSeeder()
+    announcementSeeder()
