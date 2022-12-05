@@ -13,5 +13,5 @@ Api(ANNOUNCEMENT_BLUEPRINT).add_resource(
 )
 
 Api(ANNOUNCEMENT_BLUEPRINT).add_resource(
-    AnnouncementResource, "/announcements/<int:id>"
+    AnnouncementResource, "/announcements/<string:id>"
 )

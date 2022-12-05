@@ -71,6 +71,8 @@ class AnnouncementsResource(Resource):
             "message": "Announcement updated"
         }
 
+        return response(res, 200)
+
 
 class AnnouncementResource(Resource):
 

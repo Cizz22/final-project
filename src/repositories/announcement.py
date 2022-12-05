@@ -26,6 +26,6 @@ class AnnouncementRepository():
     def update(id, **kwargs):
         announcement = AnnouncementRepository.get_by(id=id).one()
         for key, value in kwargs.items():
-            setattr(Announcement, key, value)
+            setattr(announcement, key, value)
         announcement.commit()
         return announcement
